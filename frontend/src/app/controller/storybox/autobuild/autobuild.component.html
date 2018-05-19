@@ -1,0 +1,23 @@
+<clr-datagrid>
+    <clr-dg-column>appID</clr-dg-column>
+    <clr-dg-column>cms配置</clr-dg-column>
+    <clr-dg-column>mqtt接入</clr-dg-column>
+    <clr-dg-column>回调</clr-dg-column>
+    <clr-dg-column>升级配置</clr-dg-column>
+    <clr-dg-column>预置歌单</clr-dg-column>
+    <clr-dg-column>创建时间</clr-dg-column>
+    <clr-dg-column>更新时间</clr-dg-column>
+
+    <clr-dg-row *ngFor="let build of autobuilds">
+        <clr-dg-cell>{{build.appId}}</clr-dg-cell>
+        <clr-dg-cell>{{build.cms}}</clr-dg-cell>
+        <clr-dg-cell>{{build.mqtt}}</clr-dg-cell>
+        <clr-dg-cell>{{build.callback}}</clr-dg-cell>
+        <clr-dg-cell>{{build.upgrade}}</clr-dg-cell>
+        <clr-dg-cell>{{build.album}}</clr-dg-cell>
+        <clr-dg-cell>{{build.createAt}}</clr-dg-cell>
+        <clr-dg-cell>{{build.updateAt}}</clr-dg-cell>
+    </clr-dg-row>
+
+    <clr-dg-footer>{{users.length}} users</clr-dg-footer>
+</clr-datagrid>
