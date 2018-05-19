@@ -23,7 +23,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	toolkitConfig := config.Storybox.Toolkit
+	toolkitConfig := config.Storybox.Toolkit.Database
 	initToolkit(toolkitConfig, config.App.Mode)
 }
 

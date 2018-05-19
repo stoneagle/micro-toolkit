@@ -2,74 +2,69 @@ app:
   mode: debug 
 storybox:
   toolkit:
-    name: toolkit 
-    type: mysql
-    host: mysql.localhost
-    port: 3306
-    user: root
-    target: toolkit 
-    password: 123456
-    maxIdle: 10 
-    maxOpen: 5 
-    showSQL: true
-    location: Asia/Shanghai
-  cms:
-    name: cms 
-    type: mysql
-    host: mysql.localhost
-    port: 3306
-    user: root
-    target: cms 
-    password: 123456
-    maxIdle: 10 
-    maxOpen: 5 
-    showSQL: true
-    location: Asia/Shanghai
+    database:
+      name: toolkit 
+      type: mysql
+      host: mysql.localhost
+      port: 3306
+      user: root
+      target: toolkit 
+      password: 123456
+      maxIdle: 10 
+      maxOpen: 5 
+      showSQL: true
+      location: Asia/Shanghai
   mqtt:
-    name: mqtt 
-    type: mysql
-    host: mysql.localhost
-    port: 3306
-    user: root
-    target: mqtt 
-    password: 123456
-    maxIdle: 10 
-    maxOpen: 5 
-    showSQL: true
-    location: Asia/Shanghai
+    database:
+      name: mqtt 
+      type: mysql
+      host: mysql.localhost
+      port: 3306
+      user: root
+      target: toolkit 
+      password: 123456
+      maxIdle: 10 
+      maxOpen: 5 
+      showSQL: true
+      location: Asia/Shanghai
+    params: "{\"host\":\"mqtt.roobo.net\",\"port\":1883,\"qos\":0,\"token\":\"3057fcaa6a621db5640867e99907370f\"}"
   callback:
-    name: callback 
-    type: mysql
-    host: mysql.localhost
-    port: 3306
-    user: root
-    target: callback 
-    password: 123456
-    maxIdle: 10 
-    maxOpen: 5 
-    showSQL: true
-    location: Asia/Shanghai
+    database:
+      name: callback 
+      type: mysql
+      host: mysql.localhost
+      port: 3306
+      user: root
+      target: toolkit
+      password: 123456
+      maxIdle: 10 
+      maxOpen: 5 
+      showSQL: true
+      location: Asia/Shanghai
+    config: "{\"tongmi\":[{\"url\":\"xxx\",\"state\":\"aaa\",\"action\":\"yyy\"}],\"rtoy\":[{\"url\":\"xxx\",\"state\":\"aaa\",\"action\":\"yyy\"},{\"url\":\"111\",\"state\":\"222\",\"action\":\"333\"}]}"
   upgrade:
-    name: upgrade 
-    type: mysql
-    host: mysql.localhost
-    port: 3306
-    user: root
-    target: upgrade 
-    password: 123456
-    maxIdle: 10 
-    maxOpen: 5 
-    showSQL: true
-    location: Asia/Shanghai
+    database:
+      name: upgrade 
+      type: mysql
+      host: mysql.localhost
+      port: 3306
+      user: root
+      target: toolkit
+      password: 123456
+      maxIdle: 10 
+      maxOpen: 5 
+      showSQL: true
+      location: Asia/Shanghai
   album:
-    name: album 
-    type: mysql
-    host: mysql.localhost
-    port: 3306
-    user: root
-    target: album 
-    password: 123456
-    maxIdle: 10 
-    maxOpen: 5 
-    showSQL: true
-    location: Asia/Shanghai
+    database:
+      name: album 
+      type: mysql
+      host: mysql.localhost
+      port: 3306
+      user: root
+      target: toolkit
+      password: 123456
+      maxIdle: 10 
+      maxOpen: 5 
+      showSQL: true
+      location: Asia/Shanghai

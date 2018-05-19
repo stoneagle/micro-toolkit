@@ -1,17 +1,14 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"toolkit/backend/common"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-xorm/xorm"
 )
 
 type Base struct {
 	Config common.Conf
-	Engine *xorm.Engine
 }
 
 func (b *Base) Init() {
@@ -31,7 +28,9 @@ func (b *Base) Success(ctx *gin.Context, data interface{}) {
 }
 
 func (b *Base) ErrorBusiness(ctx *gin.Context, code common.ErrorCode, desc string, err error) {
-	fmt.Println("%v\r\n", err.Error())
+	if err != nil {
+		desc += ":" + err.Error()
+	}
 	ctx.JSON(http.StatusOK, gin.H{
 		"code": code,
 		"data": struct{}{},

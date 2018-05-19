@@ -26,11 +26,23 @@ type Conf struct {
 		Mode string
 	}
 	Storybox struct {
-		Toolkit  DBConf
-		Cms      DBConf
-		Mqtt     DBConf
-		Callback DBConf
-		Upgrade  DBConf
+		Toolkit struct {
+			Database DBConf
+		}
+		Mqtt struct {
+			Database DBConf
+			Params   string
+		}
+		Callback struct {
+			Database DBConf
+			Config   string
+		}
+		Upgrade struct {
+			Database DBConf
+		}
+		Album struct {
+			Database DBConf
+		}
 	}
 }
 

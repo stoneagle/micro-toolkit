@@ -13,11 +13,15 @@ import (
 
 func Boot(app *gin.Engine) {
 	conf := common.GetConfig()
-	setProjectEngine(conf.Storybox.Toolkit)
+	setProjectEngine(conf.Storybox.Toolkit.Database)
+	setProjectEngine(conf.Storybox.Mqtt.Database)
+	setProjectEngine(conf.Storybox.Callback.Database)
+	setProjectEngine(conf.Storybox.Upgrade.Database)
+	setProjectEngine(conf.Storybox.Album.Database)
 
 	toolkit := app.Group("/toolkit")
 	{
-		controllers.NewAutoBuild(common.GetEngine(conf.Storybox.Toolkit.Name)).Router(toolkit)
+		controllers.NewAutoBuild(common.GetEngine(conf.Storybox.Toolkit.Database.Name)).Router(toolkit)
 	}
 }
 

@@ -9,6 +9,12 @@ type CallbackConfig struct {
 	Action        string `xorm:"varchar(50) notnull default('')"`
 }
 
+type CallbackTemplate struct {
+	Url    string
+	State  string
+	Action string
+}
+
 func (c CallbackConfig) TableName() string {
 	return "callback_config"
 }
