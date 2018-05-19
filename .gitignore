@@ -1,3 +1,6 @@
 backend/backend
 hack/.env
 backend/vendor/*
+.*.swp
+backend/.*.swp
+backend/*/.*.swp
