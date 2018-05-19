@@ -1,0 +1,3 @@
+backend/backend
+hack/.env
+backend/vendor/*

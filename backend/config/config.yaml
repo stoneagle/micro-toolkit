@@ -1,0 +1,75 @@
+app:
+  mode: debug 
+storybox:
+  toolkit:
+    name: toolkit 
+    type: mysql
+    host: mysql.localhost
+    port: 3306
+    user: root
+    target: toolkit 
+    password: 123456
+    maxIdle: 10 
+    maxOpen: 5 
+    showSQL: true
+    location: Asia/Shanghai
+  cms:
+    name: cms 
+    type: mysql
+    host: mysql.localhost
+    port: 3306
+    user: root
+    target: cms 
+    password: 123456
+    maxIdle: 10 
+    maxOpen: 5 
+    showSQL: true
+    location: Asia/Shanghai
+  mqtt:
+    name: mqtt 
+    type: mysql
+    host: mysql.localhost
+    port: 3306
+    user: root
+    target: mqtt 
+    password: 123456
+    maxIdle: 10 
+    maxOpen: 5 
+    showSQL: true
+    location: Asia/Shanghai
+  callback:
+    name: callback 
+    type: mysql
+    host: mysql.localhost
+    port: 3306
+    user: root
+    target: callback 
+    password: 123456
+    maxIdle: 10 
+    maxOpen: 5 
+    showSQL: true
+    location: Asia/Shanghai
+  upgrade:
+    name: upgrade 
+    type: mysql
+    host: mysql.localhost
+    port: 3306
+    user: root
+    target: upgrade 
+    password: 123456
+    maxIdle: 10 
+    maxOpen: 5 
+    showSQL: true
+    location: Asia/Shanghai
+  album:
+    name: album 
+    type: mysql
+    host: mysql.localhost
+    port: 3306
+    user: root
+    target: album 
+    password: 123456
+    maxIdle: 10 
+    maxOpen: 5 
+    showSQL: true
+    location: Asia/Shanghai
