@@ -24,10 +24,10 @@ func main() {
 		panic(err)
 	}
 	toolkitConfig := config.Storybox.Toolkit
-	initToolkit(toolkitConfig)
+	initToolkit(toolkitConfig, config.App.Mode)
 }
 
-func initToolkit(dbConfig common.DBConf) {
+func initToolkit(dbConfig common.DBConf, mode string) {
 	source := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True", dbConfig.User, dbConfig.Password, dbConfig.Host, dbConfig.Port, dbConfig.Target)
 
 	engine, err := xorm.NewEngine(dbConfig.Type, source)
@@ -41,12 +41,23 @@ func initToolkit(dbConfig common.DBConf) {
 	engine.TZLocation = location
 	engine.StoreEngine("InnoDB")
 	engine.Charset("utf8")
-	err = engine.DropTables(new(cm.AutoBuild))
-	if err != nil {
-		panic(err)
-	}
-	err = engine.Sync2(new(cm.AutoBuild))
-	if err != nil {
-		panic(err)
+	if mode == "debug" {
+		err = engine.DropTables(new(cm.AutoBuild), new(cm.CallbackConfig), new(cm.CmsPresetAlbums), new(cm.PushChannel), new(cm.UpUpdate))
+		if err != nil {
+			panic(err)
+		}
+		err = engine.Sync2(new(cm.AutoBuild), new(cm.CallbackConfig), new(cm.CmsPresetAlbums), new(cm.PushChannel), new(cm.UpUpdate))
+		if err != nil {
+			panic(err)
+		}
+	} else {
+		err = engine.DropTables(new(cm.AutoBuild))
+		if err != nil {
+			panic(err)
+		}
+		err = engine.Sync2(new(cm.AutoBuild))
+		if err != nil {
+			panic(err)
+		}
 	}
 }
