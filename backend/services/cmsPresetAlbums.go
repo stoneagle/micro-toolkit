@@ -42,7 +42,7 @@ func (u *CmsPresetAlbums) Add(autobuildId int, albumList string) (err error) {
 		}
 		album := models.CmsPresetAlbums{
 			AppId:   autobuild.AppId,
-			AlbumId: uint(albumId),
+			AlbumId: albumId,
 		}
 		_, err = sessionAL.Insert(&album)
 		if err != nil {

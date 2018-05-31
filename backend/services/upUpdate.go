@@ -34,7 +34,7 @@ func (u *UpUpdate) Add(autobuildId, vcode int, name, vname string) (err error) {
 
 	update := models.UpUpdate{
 		Name:  name,
-		Vcode: uint(vcode),
+		Vcode: vcode,
 		Vname: vname,
 	}
 	_, err = sessionUP.Insert(&update)
@@ -46,7 +46,7 @@ func (u *UpUpdate) Add(autobuildId, vcode int, name, vname string) (err error) {
 
 	updateAutobuild := models.AutoBuild{
 		UpgradeName:  name,
-		UpgradeVcode: uint(vcode),
+		UpgradeVcode: vcode,
 		UpgradeVname: vname,
 	}
 	_, err = sessionTK.Where("id = ?", autobuild.Id).Update(&updateAutobuild)

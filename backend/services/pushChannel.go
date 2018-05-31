@@ -19,6 +19,10 @@ func NewPushChannel(tk, mqtt *xorm.Engine) *PushChannel {
 	}
 }
 
+func (p *PushChannel) List(channelType string) (pushChannels []models.PushChannel, err error) {
+	return
+}
+
 func (p *PushChannel) Add(autobuildId int, paramsJson string) (err error) {
 	sessionTK := p.engineTK.NewSession()
 	defer sessionTK.Close()

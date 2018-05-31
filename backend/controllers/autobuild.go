@@ -13,11 +13,27 @@ import (
 
 type AutoBuild struct {
 	Base
+	AutoBuildSvc *services.AutoBuild
+	MqttSvc      *services.PushChannel
+	CallbackSvc  *services.CallbackConfig
+	UpdateSvc    *services.UpUpdate
+	AlbumSvc     *services.CmsPresetAlbums
 }
 
 func NewAutoBuild(engine *xorm.Engine) *AutoBuild {
 	autobuild := &AutoBuild{}
 	autobuild.Init()
+	engineTK := common.GetEngine(autobuild.Config.Storybox.Toolkit.Database.Name)
+	engineMqtt := common.GetEngine(autobuild.Config.Storybox.Mqtt.Database.Name)
+	engineCB := common.GetEngine(autobuild.Config.Storybox.Callback.Database.Name)
+	engineUP := common.GetEngine(autobuild.Config.Storybox.Upgrade.Database.Name)
+	engineAL := common.GetEngine(autobuild.Config.Storybox.Album.Database.Name)
+
+	autobuild.AutoBuildSvc = services.NewAutoBuild(engineTK)
+	autobuild.MqttSvc = services.NewPushChannel(engineTK, engineMqtt)
+	autobuild.CallbackSvc = services.NewCallbackConfig(engineTK, engineCB)
+	autobuild.UpdateSvc = services.NewUpUpdate(engineTK, engineUP)
+	autobuild.AlbumSvc = services.NewCmsPresetAlbums(engineTK, engineAL)
 	return autobuild
 }
 
@@ -27,6 +43,7 @@ func (c *AutoBuild) Router(router *gin.RouterGroup) {
 	autobuilds.POST("", c.Create)
 	autobuilds.DELETE("/:id", c.Delete)
 	autobuilds.POST("/:id/cms", c.Cms)
+	autobuilds.GET("/:id/mqtt", c.MqttList)
 	autobuilds.POST("/:id/mqtt", c.Mqtt)
 	autobuilds.POST("/:id/callback", c.Callback)
 	autobuilds.POST("/:id/upgrade", c.Upgrade)
@@ -34,9 +51,7 @@ func (c *AutoBuild) Router(router *gin.RouterGroup) {
 }
 
 func (c *AutoBuild) List(ctx *gin.Context) {
-	engine := common.GetEngine(c.Config.Storybox.Toolkit.Database.Name)
-	svc := services.NewAutoBuild(engine)
-	autobuilds, err := svc.GetList()
+	autobuilds, err := c.AutoBuildSvc.GetList()
 	if err != nil {
 		c.ErrorBusiness(ctx, common.ErrorMysql, "autobuild get error", err)
 		return
@@ -51,8 +66,7 @@ func (c *AutoBuild) Create(ctx *gin.Context) {
 		return
 	}
 
-	engine := common.GetEngine(c.Config.Storybox.Toolkit.Database.Name)
-	_, err := engine.Insert(&autobuild)
+	err := c.AutoBuildSvc.Add(&autobuild)
 	if err != nil {
 		c.ErrorBusiness(ctx, common.ErrorMysql, "autobuild insert error", err)
 		return
@@ -69,15 +83,7 @@ func (c *AutoBuild) Delete(ctx *gin.Context) {
 		return
 	}
 
-	engine := common.GetEngine(c.Config.Storybox.Toolkit.Database.Name)
-	var autobuild models.AutoBuild
-	_, err = engine.Id(id).Get(&autobuild)
-	if err != nil {
-		c.ErrorBusiness(ctx, common.ErrorMysql, "autobuild get error", err)
-		return
-	}
-
-	_, err = engine.Id(id).Delete(&autobuild)
+	err = c.AutoBuildSvc.Delete(id)
 	if err != nil {
 		c.ErrorBusiness(ctx, common.ErrorMysql, "autobuild delete error", err)
 		return
@@ -89,6 +95,15 @@ func (c *AutoBuild) Delete(ctx *gin.Context) {
 func (c *AutoBuild) Cms(ctx *gin.Context) {
 }
 
+func (c *AutoBuild) MqttList(ctx *gin.Context) {
+	// idStr := ctx.Param("id")
+	// id, err := strconv.Atoi(idStr)
+	// if err != nil {
+	// 	c.ErrorBusiness(ctx, common.ErrorParams, "id params error", err)
+	// 	return
+	// }
+}
+
 func (c *AutoBuild) Mqtt(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -97,11 +112,7 @@ func (c *AutoBuild) Mqtt(ctx *gin.Context) {
 		return
 	}
 
-	engineTK := common.GetEngine(c.Config.Storybox.Toolkit.Database.Name)
-	engineMqtt := common.GetEngine(c.Config.Storybox.Mqtt.Database.Name)
-
-	svc := services.NewPushChannel(engineTK, engineMqtt)
-	err = svc.Add(id, c.Config.Storybox.Mqtt.Params)
+	err = c.MqttSvc.Add(id, c.Config.Storybox.Mqtt.Params)
 	if err != nil {
 		c.ErrorBusiness(ctx, common.ErrorMysql, "mqtt配置失败", err)
 		return
@@ -121,9 +132,6 @@ func (c *AutoBuild) Callback(ctx *gin.Context) {
 		return
 	}
 
-	engineTK := common.GetEngine(c.Config.Storybox.Toolkit.Database.Name)
-	engineCB := common.GetEngine(c.Config.Storybox.Callback.Database.Name)
-
 	templateConfig := c.Config.Storybox.Callback.Config
 	var templateMap map[string][]models.CallbackTemplate
 	err := json.Unmarshal([]byte(templateConfig), &templateMap)
@@ -138,8 +146,7 @@ func (c *AutoBuild) Callback(ctx *gin.Context) {
 		return
 	}
 
-	svc := services.NewCallbackConfig(engineTK, engineCB)
-	err = svc.Add(int(autobuild.Id), templateSlice, autobuild.Callback)
+	err = c.CallbackSvc.Add(autobuild.Id, templateSlice, autobuild.Callback)
 	if err != nil {
 		c.ErrorBusiness(ctx, common.ErrorMysql, "callback配置失败", err)
 		return
@@ -160,15 +167,12 @@ func (c *AutoBuild) Upgrade(ctx *gin.Context) {
 		return
 	}
 
-	engineTK := common.GetEngine(c.Config.Storybox.Toolkit.Database.Name)
-	engineUP := common.GetEngine(c.Config.Storybox.Upgrade.Database.Name)
-	svc := services.NewUpUpdate(engineTK, engineUP)
-	err := svc.Add(int(autobuild.Id), int(autobuild.UpgradeVcode), autobuild.UpgradeName, autobuild.UpgradeVname)
+	err := c.UpdateSvc.Add(autobuild.Id, autobuild.UpgradeVcode, autobuild.UpgradeName, autobuild.UpgradeVname)
 	if err != nil {
 		c.ErrorBusiness(ctx, common.ErrorMysql, "upgrade配置失败", err)
 		return
 	}
-	c.Success(ctx, int(autobuild.Id))
+	c.Success(ctx, autobuild.Id)
 }
 
 func (c *AutoBuild) Album(ctx *gin.Context) {
@@ -177,17 +181,16 @@ func (c *AutoBuild) Album(ctx *gin.Context) {
 		c.ErrorBusiness(ctx, common.ErrorParams, "params error: ", err)
 		return
 	}
+
 	if autobuild.Id == 0 || autobuild.AlbumList == "" {
 		c.ErrorBusiness(ctx, common.ErrorParams, "id and albumList params can not be empty", nil)
 		return
 	}
-	engineTK := common.GetEngine(c.Config.Storybox.Toolkit.Database.Name)
-	engineAL := common.GetEngine(c.Config.Storybox.Album.Database.Name)
-	svc := services.NewCmsPresetAlbums(engineTK, engineAL)
-	err := svc.Add(int(autobuild.Id), autobuild.AlbumList)
+
+	err := c.AlbumSvc.Add(autobuild.Id, autobuild.AlbumList)
 	if err != nil {
 		c.ErrorBusiness(ctx, common.ErrorMysql, "albumlist配置失败", err)
 		return
 	}
-	c.Success(ctx, int(autobuild.Id))
+	c.Success(ctx, autobuild.Id)
 }
