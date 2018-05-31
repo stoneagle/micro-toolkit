@@ -14,7 +14,8 @@ export class MqttAutobuildComponent implements OnInit {
   mqtts: Mqtt[] = [];
   modelOpened: boolean = false;
   showOpened: boolean = false;
-  @Output() create = new EventEmitter<boolean>();
+  @Output() create = new EventEmitter<string>();
+  @Output() roll = new EventEmitter<string>();
 
   constructor(
     private autobuildService: AutobuildService
@@ -37,14 +38,18 @@ export class MqttAutobuildComponent implements OnInit {
   }
 
   rollback(): void {
-    this.showOpened = false;
+    this.autobuildService.rollbackMqtt(this.autobuild)
+    .subscribe(res => {
+      this.showOpened = false;
+      this.roll.emit("mqtt");
+    })
   }
 
   submit(): void {
     this.autobuildService.execMqtt(this.autobuild.Id)
     .subscribe(res => {
       this.modelOpened = false;
-      this.create.emit(true);
+      this.create.emit("mqtt");
     })
   }
 }

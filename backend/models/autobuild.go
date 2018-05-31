@@ -10,7 +10,7 @@ type AutoBuild struct {
 	UpgradeName        string `xorm:"default('') comment('升级配置名称')"`
 	UpgradeVcode       int    `xorm:"default(0) comment('升级配置号')"`
 	UpgradeVname       string `xorm:"default('') comment('升级配置展示名称')"`
-	AlbumList          string `xorm:"default(0) comment('预置歌单列表,分隔')"`
+	AlbumList          string `xorm:"default('') comment('预置歌单列表,分隔')"`
 }
 
 func (c AutoBuild) TableName() string {

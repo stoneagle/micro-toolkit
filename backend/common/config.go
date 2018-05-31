@@ -17,7 +17,7 @@ type DBConf struct {
 	Target   string
 	MaxIdle  int
 	MaxOpen  int
-	ShowSQL  bool
+	Showsql  bool
 	Location string
 }
 

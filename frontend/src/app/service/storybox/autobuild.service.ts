@@ -26,6 +26,34 @@ export class AutobuildService {
     private http: HttpClient,
   ) { }
 
+  rollbackMqtt(autobuild: Autobuild): Observable<Response> {
+    return this.http.delete<Response>(AppConfig.settings.apiServer.endpoint + this.autobuildUrl + `/${autobuild.Id}/mqtt`, httpOptions).pipe(
+      tap(pools => this.log(`rollback mqtt`)),
+      catchError(this.handleError<Response>('rollbackMqtt'))
+    );
+  }
+
+  rollbackUpgrade(autobuild: Autobuild): Observable<Response> {
+    return this.http.delete<Response>(AppConfig.settings.apiServer.endpoint + this.autobuildUrl + `/${autobuild.Id}/upgrade`, httpOptions).pipe(
+      tap(pools => this.log(`rollback upgrade`)),
+      catchError(this.handleError<Response>('rollbackUpgrade'))
+    );
+  }
+
+  rollbackAlbum(autobuild: Autobuild): Observable<Response> {
+    return this.http.delete<Response>(AppConfig.settings.apiServer.endpoint + this.autobuildUrl + `/${autobuild.Id}/album`, httpOptions).pipe(
+      tap(pools => this.log(`rollback album`)),
+      catchError(this.handleError<Response>('rollbackAlbum'))
+    );
+  }
+
+  rollbackCallback(autobuild: Autobuild): Observable<Response> {
+    return this.http.delete<Response>(AppConfig.settings.apiServer.endpoint + this.autobuildUrl + `/${autobuild.Id}/callback`, httpOptions).pipe(
+      tap(pools => this.log(`rollback callback`)),
+      catchError(this.handleError<Response>('rollbackCallback'))
+    );
+  }
+
   execMqtt(id: number): Observable<Response> {
     return this.http.post<Response>(AppConfig.settings.apiServer.endpoint + this.autobuildUrl + `/${id}/mqtt`, httpOptions).pipe(
       tap(pools => this.log(`exec mqtt`)),

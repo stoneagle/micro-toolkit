@@ -25,6 +25,25 @@ func (p *PushChannel) List(channelType string) (pushChannels []models.PushChanne
 	return
 }
 
+func (p *PushChannel) Delete(channelType string) (err error) {
+	sessionMqtt := p.engineMqtt.NewSession()
+	defer sessionMqtt.Close()
+	lists, err := p.List(channelType)
+	if err != nil {
+		sessionMqtt.Rollback()
+		return
+	}
+	for _, one := range lists {
+		_, err = sessionMqtt.Id(one.General.Id).Delete(&one)
+		if err != nil {
+			sessionMqtt.Rollback()
+			return
+		}
+	}
+	err = sessionMqtt.Commit()
+	return
+}
+
 func (p *PushChannel) Add(autobuildId int, paramsJson string) (err error) {
 	sessionTK := p.engineTK.NewSession()
 	defer sessionTK.Close()

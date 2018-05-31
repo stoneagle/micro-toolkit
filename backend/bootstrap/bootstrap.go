@@ -55,7 +55,9 @@ func setProjectEngine(dbConfig common.DBConf) {
 		panic(err)
 	}
 	engine.TZLocation = location
-	engine.ShowSQL(dbConfig.ShowSQL)
+	if dbConfig.Showsql {
+		engine.ShowSQL(true)
+	}
 
 	common.SetEngine(dbConfig.Name, engine)
 }

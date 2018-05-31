@@ -39,35 +39,17 @@ export class AutobuildComponent implements OnInit {
     this.refresh();
   }
 
-  createAutobuild(created: boolean):void {
-    if (created) {
+  createFinished(resource: string): void {
+    if (resource != '') {
       this.refresh();
     }
   }
 
-  execUpgrade(created: boolean): void {
-    if (created) {
+  rollbackFinished(resource: string): void {
+    if (resource != '') {
       this.refresh();
     }
   }
-
-  execAlbum(created: boolean): void {
-    if (created) {
-      this.refresh();
-    }
-  }
-
-  execCallback(created: boolean): void {
-    if (created) {
-      this.refresh();
-    }
-  }
-
-	execMqtt(created: boolean): void {
-    if (created) {
-      this.refresh();
-    }
-	}
 
   openAlbumModel(ab: Autobuild): void {
     this.albumAutobuild.newAlbum(ab);

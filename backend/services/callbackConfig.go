@@ -24,6 +24,25 @@ func (u *CallbackConfig) List(appId string) (callbacks []models.CallbackConfig, 
 	return
 }
 
+func (s *CallbackConfig) Delete(appId string) (err error) {
+	session := s.engineCB.NewSession()
+	defer session.Close()
+	lists, err := s.List(appId)
+	if err != nil {
+		session.Rollback()
+		return
+	}
+	for _, one := range lists {
+		_, err = session.Id(one.General.Id).Delete(&one)
+		if err != nil {
+			session.Rollback()
+			return
+		}
+	}
+	err = session.Commit()
+	return
+}
+
 func (u *CallbackConfig) Add(autobuildId int, templateSlice []models.CallbackTemplate, ctype string) (err error) {
 	sessionTK := u.engineTK.NewSession()
 	defer sessionTK.Close()

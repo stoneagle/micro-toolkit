@@ -12,7 +12,7 @@ storybox:
       password: 123456
       maxIdle: 10 
       maxOpen: 5 
-      showSQL: true
+      showsql: True
       location: Asia/Shanghai
   mqtt:
     database:
@@ -25,7 +25,7 @@ storybox:
       password: 123456
       maxIdle: 10 
       maxOpen: 5 
-      showSQL: true
+      showsql: True
       location: Asia/Shanghai
     params: "{\"host\":\"mqtt.roobo.net\",\"port\":1883,\"qos\":0,\"token\":\"3057fcaa6a621db5640867e99907370f\"}"
   callback:
@@ -39,7 +39,7 @@ storybox:
       password: 123456
       maxIdle: 10 
       maxOpen: 5 
-      showSQL: true
+      showsql: True
       location: Asia/Shanghai
     config: "{\"tongmi\":[{\"url\":\"xxx\",\"state\":\"aaa\",\"action\":\"yyy\"}],\"rtoy\":[{\"url\":\"xxx\",\"state\":\"aaa\",\"action\":\"yyy\"},{\"url\":\"111\",\"state\":\"222\",\"action\":\"333\"}]}"
   upgrade:
@@ -53,7 +53,7 @@ storybox:
       password: 123456
       maxIdle: 10 
       maxOpen: 5 
-      showSQL: true
+      showsql: True
       location: Asia/Shanghai
   album:
     database:
@@ -66,5 +66,5 @@ storybox:
       password: 123456
       maxIdle: 10 
       maxOpen: 5 
-      showSQL: true
+      showsql: True
       location: Asia/Shanghai

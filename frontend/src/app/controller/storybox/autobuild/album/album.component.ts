@@ -14,7 +14,8 @@ export class AlbumAutobuildComponent implements OnInit {
   showOpened: boolean = false;
   albums: Album[] = [];
   autobuild: Autobuild = new Autobuild();
-  @Output() create = new EventEmitter<boolean>();
+  @Output() create = new EventEmitter<string>();
+  @Output() roll = new EventEmitter<string>();
 
   constructor(
     private autobuildService: AutobuildService
@@ -36,12 +37,20 @@ export class AlbumAutobuildComponent implements OnInit {
     }
   }
 
+  rollback(): void {
+    this.autobuildService.rollbackAlbum(this.autobuild)
+    .subscribe(res => {
+      this.showOpened = false;
+      this.roll.emit("album");
+    })
+  }
+
   submit(): void {
     if (this.autobuild.AlbumList != '') {
       this.autobuildService.execAlbum(this.autobuild)
       .subscribe(res => {
         this.modelOpened = false;
-        this.create.emit(true);
+        this.create.emit("album");
       })
     }
   }

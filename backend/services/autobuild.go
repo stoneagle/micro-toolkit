@@ -16,6 +16,11 @@ func NewAutoBuild(engine *xorm.Engine) *AutoBuild {
 	}
 }
 
+func (m *AutoBuild) UpdateByMap(id int, autobuild map[string]interface{}) (err error) {
+	_, err = m.engine.Table(new(models.AutoBuild)).Id(id).Update(&autobuild)
+	return
+}
+
 func (m *AutoBuild) GetOne(id int) (autobuild models.AutoBuild, err error) {
 	autobuild = models.AutoBuild{}
 	_, err = m.engine.Where("id = ?", id).Get(&autobuild)

@@ -58,8 +58,8 @@
 		</clr-dg-footer>
 </clr-datagrid>
 
-<add-autobuild (create)="createAutobuild($event)"></add-autobuild>
-<album-autobuild (create)="execAlbum($event)"></album-autobuild>
-<callback-autobuild (create)="execCallback($event)"></callback-autobuild>
-<mqtt-autobuild (create)="execMqtt($event)"></mqtt-autobuild>
-<upgrade-autobuild (create)="execUpgrade($event)"><upgrade-autobuild>
+<add-autobuild (create)="createFinished($event)"></add-autobuild>
+<album-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></album-autobuild>
+<callback-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></callback-autobuild>
+<mqtt-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></mqtt-autobuild>
+<upgrade-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"><upgrade-autobuild>

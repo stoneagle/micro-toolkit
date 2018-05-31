@@ -26,6 +26,25 @@ func (u *CmsPresetAlbums) List(appId string) (albums []models.CmsPresetAlbums, e
 	return
 }
 
+func (s *CmsPresetAlbums) Delete(appId string) (err error) {
+	session := s.engineAL.NewSession()
+	defer session.Close()
+	lists, err := s.List(appId)
+	if err != nil {
+		session.Rollback()
+		return
+	}
+	for _, one := range lists {
+		_, err = session.Id(one.GeneralWithDeleted.Id).Delete(&one)
+		if err != nil {
+			session.Rollback()
+			return
+		}
+	}
+	err = session.Commit()
+	return
+}
+
 func (u *CmsPresetAlbums) Add(autobuildId int, albumList string) (err error) {
 	sessionTK := u.engineTK.NewSession()
 	defer sessionTK.Close()

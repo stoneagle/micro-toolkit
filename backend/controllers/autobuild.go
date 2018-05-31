@@ -40,17 +40,21 @@ func NewAutoBuild(engine *xorm.Engine) *AutoBuild {
 func (c *AutoBuild) Router(router *gin.RouterGroup) {
 	autobuilds := router.Group("autobuild")
 	autobuilds.GET("", c.List)
+	autobuilds.GET("/:id/mqtt", InitAutobuild(), c.MqttList)
+	autobuilds.GET("/:id/callback", InitAutobuild(), c.CallbackList)
+	autobuilds.GET("/:id/upgrade", InitAutobuild(), c.UpgradeList)
+	autobuilds.GET("/:id/album", InitAutobuild(), c.AlbumList)
 	autobuilds.POST("", c.Create)
-	autobuilds.DELETE("/:id", c.Delete)
 	autobuilds.POST("/:id/cms", c.Cms)
 	autobuilds.POST("/:id/mqtt", c.Mqtt)
 	autobuilds.POST("/:id/callback", c.Callback)
 	autobuilds.POST("/:id/upgrade", c.Upgrade)
 	autobuilds.POST("/:id/album", c.Album)
-	autobuilds.GET("/:id/mqtt", InitAutobuild(), c.MqttList)
-	autobuilds.GET("/:id/callback", InitAutobuild(), c.CallbackList)
-	autobuilds.GET("/:id/upgrade", InitAutobuild(), c.UpgradeList)
-	autobuilds.GET("/:id/album", InitAutobuild(), c.AlbumList)
+	autobuilds.DELETE("/:id", c.Delete)
+	autobuilds.DELETE("/:id/mqtt", InitAutobuild(), c.MqttDelete)
+	autobuilds.DELETE("/:id/callback", InitAutobuild(), c.CallbackDelete)
+	autobuilds.DELETE("/:id/upgrade", InitAutobuild(), c.UpgradeDelete)
+	autobuilds.DELETE("/:id/album", InitAutobuild(), c.AlbumDelete)
 }
 
 func InitAutobuild() gin.HandlerFunc {
@@ -252,4 +256,78 @@ func (c *AutoBuild) AlbumList(ctx *gin.Context) {
 		return
 	}
 	common.ResponseSuccess(ctx, albums)
+}
+
+func (c *AutoBuild) MqttDelete(ctx *gin.Context) {
+	autobuild := ctx.MustGet("autobuild").(models.AutoBuild)
+	err := c.MqttSvc.Delete(autobuild.AppId)
+	if err != nil {
+		common.ResponseErrorBusiness(ctx, common.ErrorMysql, "delete mqtt error", err)
+		return
+	}
+	updateAutobuild := map[string]interface{}{
+		"mqtt": 0,
+	}
+	err = c.AutoBuildSvc.UpdateByMap(autobuild.Id, updateAutobuild)
+	if err != nil {
+		common.ResponseErrorBusiness(ctx, common.ErrorMysql, "update autobuild error", err)
+		return
+	}
+	common.ResponseSuccess(ctx, struct{}{})
+}
+
+func (c *AutoBuild) CallbackDelete(ctx *gin.Context) {
+	autobuild := ctx.MustGet("autobuild").(models.AutoBuild)
+	err := c.CallbackSvc.Delete(autobuild.AppId)
+	if err != nil {
+		common.ResponseErrorBusiness(ctx, common.ErrorMysql, "delete callback error", err)
+		return
+	}
+	updateAutobuild := map[string]interface{}{
+		"callback": "",
+	}
+	err = c.AutoBuildSvc.UpdateByMap(autobuild.Id, updateAutobuild)
+	if err != nil {
+		common.ResponseErrorBusiness(ctx, common.ErrorMysql, "update autobuild error", err)
+		return
+	}
+	common.ResponseSuccess(ctx, struct{}{})
+}
+
+func (c *AutoBuild) UpgradeDelete(ctx *gin.Context) {
+	autobuild := ctx.MustGet("autobuild").(models.AutoBuild)
+	err := c.UpgradeSvc.Delete(autobuild.UpgradeName, autobuild.UpgradeVcode)
+	if err != nil {
+		common.ResponseErrorBusiness(ctx, common.ErrorMysql, "delete upgrade error", err)
+		return
+	}
+	updateAutobuild := map[string]interface{}{
+		"upgrade_name":  "",
+		"upgrade_vcode": 0,
+		"upgrade_vname": "",
+	}
+	err = c.AutoBuildSvc.UpdateByMap(autobuild.Id, updateAutobuild)
+	if err != nil {
+		common.ResponseErrorBusiness(ctx, common.ErrorMysql, "update autobuild error", err)
+		return
+	}
+	common.ResponseSuccess(ctx, struct{}{})
+}
+
+func (c *AutoBuild) AlbumDelete(ctx *gin.Context) {
+	autobuild := ctx.MustGet("autobuild").(models.AutoBuild)
+	err := c.AlbumSvc.Delete(autobuild.AppId)
+	if err != nil {
+		common.ResponseErrorBusiness(ctx, common.ErrorMysql, "delete album error", err)
+		return
+	}
+	updateAutobuild := map[string]interface{}{
+		"album_list": "",
+	}
+	err = c.AutoBuildSvc.UpdateByMap(autobuild.Id, updateAutobuild)
+	if err != nil {
+		common.ResponseErrorBusiness(ctx, common.ErrorMysql, "update autobuild error", err)
+		return
+	}
+	common.ResponseSuccess(ctx, struct{}{})
 }

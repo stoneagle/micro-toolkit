@@ -24,6 +24,25 @@ func (u *UpUpdate) List(name string, vcode int) (updates []models.UpUpdate, err 
 	return
 }
 
+func (s *UpUpdate) Delete(name string, vcode int) (err error) {
+	session := s.engineUP.NewSession()
+	defer session.Close()
+	lists, err := s.List(name, vcode)
+	if err != nil {
+		session.Rollback()
+		return
+	}
+	for _, one := range lists {
+		_, err = session.Id(one.GeneralWithDeleted.Id).Delete(&one)
+		if err != nil {
+			session.Rollback()
+			return
+		}
+	}
+	err = session.Commit()
+	return
+}
+
 func (u *UpUpdate) Add(autobuildId, vcode int, name, vname string) (err error) {
 	sessionTK := u.engineTK.NewSession()
 	defer sessionTK.Close()
