@@ -70,21 +70,15 @@ export class AutobuildComponent implements OnInit {
 	}
 
   openAlbumModel(ab: Autobuild): void {
-    if (ab.AlbumList == '') {
-      this.albumAutobuild.newAlbum(ab);
-    }
+    this.albumAutobuild.newAlbum(ab);
   }
 
   openCallbackModel(ab: Autobuild): void {
-    if (ab.Callback == '') {
-      this.callbackAutobuild.newCallback(ab);
-    }
+    this.callbackAutobuild.newCallback(ab);
   }
 
   openMqttModel(ab: Autobuild): void {
-    if (ab.Mqtt == 0) {
-      this.mqttAutobuild.newMqtt(ab);
-    }
+    this.mqttAutobuild.newMqtt(ab);
   }
 
   openCmsModel(ab: Autobuild): void {
@@ -92,9 +86,7 @@ export class AutobuildComponent implements OnInit {
   }
 
   openUpgradeModel(ab: Autobuild): void {
-    if (ab.UpgradeName == '') {
-      this.upgradeAutobuild.newUpgrade(ab);
-    }
+    this.upgradeAutobuild.newUpgrade(ab);
   }
 
   openAddModel(): void {

@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Autobuild } from '../../../../model/storybox/autobuild';
+import { Callback } from '../../../../model/storybox/callback';
 import { AutobuildService  } from '../../../../service/storybox/autobuild.service';
 
 @Component({
@@ -10,7 +11,9 @@ import { AutobuildService  } from '../../../../service/storybox/autobuild.servic
 
 export class CallbackAutobuildComponent implements OnInit {
 	autobuild: Autobuild = new Autobuild;
+  callbacks: Callback[] = [];
   modelOpened: boolean = false;
+  showOpened: boolean = false;
   @Output() create = new EventEmitter<boolean>();
 
   constructor(
@@ -21,8 +24,16 @@ export class CallbackAutobuildComponent implements OnInit {
   }
 
   newCallback(autobuild: Autobuild): void {
-    this.modelOpened = true;
     this.autobuild = autobuild;
+    if (this.autobuild.Callback == '') {
+      this.modelOpened = true;
+    } else {
+      this.autobuildService.getCallback(this.autobuild)
+      .subscribe(res => {
+        this.callbacks = res;
+        this.showOpened = true;
+      })
+    }
   }
 
   submit(): void {

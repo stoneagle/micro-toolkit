@@ -4,6 +4,10 @@ import { Observable } from 'rxjs';
 import { of } from 'rxjs/observable/of';
 import { catchError, map, tap  } from 'rxjs/operators';
 import { Autobuild } from '../../model/storybox/autobuild';
+import { Mqtt } from '../../model/storybox/mqtt';
+import { Callback } from '../../model/storybox/callback';
+import { Upgrade } from '../../model/storybox/upgrade';
+import { Album } from '../../model/storybox/album'
 import { Response } from '../../model/app.response.model';
 import { AppConfig } from '../app.config';
 
@@ -69,6 +73,70 @@ export class AutobuildService {
           }
         )
         return abs; 
+      })
+    );
+  }
+
+  getMqtt(autobuild: Autobuild): Observable<Mqtt[]> {
+    return this.http.get<Response>(AppConfig.settings.apiServer.endpoint + this.autobuildUrl + `/${autobuild.Id}/mqtt`, httpOptions).pipe(
+      tap(pools => this.log(`get mqtts list`)),
+      catchError(this.handleError<Response>('getMqtts')),
+      map(res => {
+        let mqtts:Mqtt[] = []; 
+        res.data.map(
+          one => {
+            mqtts.push(new Mqtt(one));
+          }
+        )
+        return mqtts; 
+      })
+    );
+  }
+
+  getCallback(autobuild: Autobuild): Observable<Callback[]> {
+    return this.http.get<Response>(AppConfig.settings.apiServer.endpoint + this.autobuildUrl + `/${autobuild.Id}/callback`, httpOptions).pipe(
+      tap(pools => this.log(`get callbacks list`)),
+      catchError(this.handleError<Response>('getCallbacks')),
+      map(res => {
+        let cbs:Callback[] = []; 
+        res.data.map(
+          one => {
+            cbs.push(new Callback(one));
+          }
+        )
+        return cbs; 
+      })
+    );
+  }
+
+  getUpgrade(autobuild: Autobuild): Observable<Upgrade[]> {
+    return this.http.get<Response>(AppConfig.settings.apiServer.endpoint + this.autobuildUrl + `/${autobuild.Id}/upgrade`, httpOptions).pipe(
+      tap(pools => this.log(`get upgrades list`)),
+      catchError(this.handleError<Response>('getUpgrades')),
+      map(res => {
+        let ups:Upgrade[] = []; 
+        res.data.map(
+          one => {
+            ups.push(new Upgrade(one));
+          }
+        )
+        return ups; 
+      })
+    );
+  }
+
+  getAlbum(autobuild: Autobuild): Observable<Album[]> {
+    return this.http.get<Response>(AppConfig.settings.apiServer.endpoint + this.autobuildUrl + `/${autobuild.Id}/album`, httpOptions).pipe(
+      tap(pools => this.log(`get albums list`)),
+      catchError(this.handleError<Response>('getAlbums')),
+      map(res => {
+        let als:Album[] = []; 
+        res.data.map(
+          one => {
+            als.push(new Album(one));
+          }
+        )
+        return als; 
       })
     );
   }

@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Autobuild } from '../../../../model/storybox/autobuild';
+import { Mqtt } from '../../../../model/storybox/mqtt';
 import { AutobuildService  } from '../../../../service/storybox/autobuild.service';
 
 @Component({
@@ -10,7 +11,9 @@ import { AutobuildService  } from '../../../../service/storybox/autobuild.servic
 
 export class MqttAutobuildComponent implements OnInit {
 	autobuild: Autobuild = new Autobuild;
+  mqtts: Mqtt[] = [];
   modelOpened: boolean = false;
+  showOpened: boolean = false;
   @Output() create = new EventEmitter<boolean>();
 
   constructor(
@@ -22,7 +25,19 @@ export class MqttAutobuildComponent implements OnInit {
 
   newMqtt(autobuild: Autobuild): void {
     this.autobuild = autobuild;
-    this.modelOpened = true;
+    if (autobuild.Mqtt == 0) {
+      this.modelOpened = true;
+    } else {
+      this.autobuildService.getMqtt(this.autobuild)
+      .subscribe(res => {
+        this.mqtts = res;
+        this.showOpened = true;
+      })
+    }
+  }
+
+  rollback(): void {
+    this.showOpened = false;
   }
 
   submit(): void {

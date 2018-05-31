@@ -20,6 +20,8 @@ func NewPushChannel(tk, mqtt *xorm.Engine) *PushChannel {
 }
 
 func (p *PushChannel) List(channelType string) (pushChannels []models.PushChannel, err error) {
+	pushChannels = make([]models.PushChannel, 0)
+	err = p.engineMqtt.Where("channel_type = ?", channelType).And("service = ?", "mqtt").And("production = ?", "storybox").Find(&pushChannels)
 	return
 }
 

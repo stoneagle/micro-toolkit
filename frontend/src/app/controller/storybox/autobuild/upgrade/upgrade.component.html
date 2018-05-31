@@ -19,3 +19,28 @@
 			</form>
     </div>
 </clr-modal>
+
+<clr-modal [(clrModalOpen)]="showOpened">
+    <h3 class="modal-title">upgrade配置</h3>
+    <div class="modal-body">
+      <clr-datagrid>
+          <clr-dg-column>ID</clr-dg-column>
+          <clr-dg-column>Name</clr-dg-column>
+          <clr-dg-column>Vcode</clr-dg-column>
+          <clr-dg-column>Vname</clr-dg-column>
+          <clr-dg-column>创建时间</clr-dg-column>
+          <clr-dg-column>更新时间</clr-dg-column>
+
+          <clr-dg-row *ngFor="let one of upgrades">
+              <clr-dg-cell>{{one.Id}}</clr-dg-cell>
+              <clr-dg-cell>{{one.Name}}</clr-dg-cell>
+              <clr-dg-cell>{{one.Vcode}}</clr-dg-cell>
+              <clr-dg-cell>{{one.Vname}}</clr-dg-cell>
+              <clr-dg-cell>{{one.CreatedAt}}</clr-dg-cell>
+              <clr-dg-cell>{{one.UPdatedAt}}</clr-dg-cell>
+          </clr-dg-row>
+      </clr-datagrid>
+      <button type="button" (click)="rollback()" class="btn btn-success">Rollback</button>
+      <button type="button" class="btn btn-primary" (click)="showOpened = false">Cancel</button>
+    </div>
+</clr-modal>

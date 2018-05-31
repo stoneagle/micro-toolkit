@@ -18,6 +18,12 @@ func NewCallbackConfig(tk, cb *xorm.Engine) *CallbackConfig {
 	}
 }
 
+func (u *CallbackConfig) List(appId string) (callbacks []models.CallbackConfig, err error) {
+	callbacks = make([]models.CallbackConfig, 0)
+	err = u.engineCB.Where("app_id = ?", appId).Find(&callbacks)
+	return
+}
+
 func (u *CallbackConfig) Add(autobuildId int, templateSlice []models.CallbackTemplate, ctype string) (err error) {
 	sessionTK := u.engineTK.NewSession()
 	defer sessionTK.Close()

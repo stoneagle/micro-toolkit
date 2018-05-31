@@ -20,6 +20,12 @@ func NewCmsPresetAlbums(tk, al *xorm.Engine) *CmsPresetAlbums {
 	}
 }
 
+func (u *CmsPresetAlbums) List(appId string) (albums []models.CmsPresetAlbums, err error) {
+	albums = make([]models.CmsPresetAlbums, 0)
+	err = u.engineAL.Where("app_id = ?", appId).Find(&albums)
+	return
+}
+
 func (u *CmsPresetAlbums) Add(autobuildId int, albumList string) (err error) {
 	sessionTK := u.engineTK.NewSession()
 	defer sessionTK.Close()

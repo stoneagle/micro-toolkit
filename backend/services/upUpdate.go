@@ -18,6 +18,12 @@ func NewUpUpdate(tk, up *xorm.Engine) *UpUpdate {
 	}
 }
 
+func (u *UpUpdate) List(name string, vcode int) (updates []models.UpUpdate, err error) {
+	updates = make([]models.UpUpdate, 0)
+	err = u.engineUP.Where("name = ?", name).And("vcode = ?", vcode).Find(&updates)
+	return
+}
+
 func (u *UpUpdate) Add(autobuildId, vcode int, name, vname string) (err error) {
 	sessionTK := u.engineTK.NewSession()
 	defer sessionTK.Close()

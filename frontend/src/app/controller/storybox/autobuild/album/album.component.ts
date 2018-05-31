@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Autobuild } from '../../../../model/storybox/autobuild';
+import { Album } from '../../../../model/storybox/album';
 import { AutobuildService  } from '../../../../service/storybox/autobuild.service';
 
 @Component({
@@ -10,6 +11,8 @@ import { AutobuildService  } from '../../../../service/storybox/autobuild.servic
 
 export class AlbumAutobuildComponent implements OnInit {
   modelOpened: boolean = false;
+  showOpened: boolean = false;
+  albums: Album[] = [];
   autobuild: Autobuild = new Autobuild();
   @Output() create = new EventEmitter<boolean>();
 
@@ -21,8 +24,16 @@ export class AlbumAutobuildComponent implements OnInit {
   }
 
   newAlbum(autobuild: Autobuild): void {
-    this.modelOpened = true;
     this.autobuild = autobuild;
+    if (this.autobuild.AlbumList == '') {
+      this.modelOpened = true;
+    } else {
+      this.autobuildService.getAlbum(this.autobuild)
+      .subscribe(res => {
+        this.albums = res;
+        this.showOpened = true;
+      })
+    }
   }
 
   submit(): void {
