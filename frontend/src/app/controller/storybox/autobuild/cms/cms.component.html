@@ -1,13 +1,29 @@
 <clr-modal [(clrModalOpen)]="modelOpened">
-    <h3 class="modal-title">创建自动化配置</h3>
+    <h3 class="modal-title">cms复制</h3>
     <div class="modal-body">
-			<form #addForm="ngForm" (ngSubmit)="submit()">
+			<div *ngIf="(alertOpened != false)" class="alert alert-danger">
+					<div class="alert-items">
+							<div class="alert-item static">
+									<div class="alert-icon-wrapper">
+											<clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
+									</div>
+									<span class="alert-text">
+											<span class="spinner spinner-sm">
+													Copy...
+											</span>
+											执行复制操作需要15-20秒时间，请耐心等待	
+									</span>
+							</div>
+					</div>
+			</div>
+			<form #albumForm="ngForm" (ngSubmit)="submit()">
 				<div class="form-group">
-					<label for="name">目标AppId</label>
-					<input type="text" class="form-control" id="AppId" required [(ngModel)]="autobuild.AppId" name="AppId" >
+					<label for="AlbumList">来源AppId</label>
+					<input type="text" class="form-control" id="CmsSourceApp" required [(ngModel)]="autobuild.CmsSourceApp" name="CmsSourceApp" placeholder="来源app">
 				</div>
 				<button type="submit" class="btn btn-success">Submit</button>
         <button type="button" class="btn btn-primary" (click)="modelOpened = false">Cancel</button>
 			</form>
     </div>
 </clr-modal>
+

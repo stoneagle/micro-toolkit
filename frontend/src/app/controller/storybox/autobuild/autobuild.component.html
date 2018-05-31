@@ -18,8 +18,11 @@
         <clr-dg-cell>{{build.Id}}</clr-dg-cell>
         <clr-dg-cell>{{build.AppId}}</clr-dg-cell>
         <clr-dg-cell>
-          <a href="javascript:void(0)" (click)="openCmsModel(build)" [ngClass]="(build.CmsSourceApp=='')?'label label-danger clickable':'label label-success clickable'">
+          <a href="javascript:void(0)" (click)="openCmsModel(build)" [ngClass]="(build.CmsSourceApp=='')?'label label-danger clickable':'label label-success'">
             {{(build.CmsSourceApp === '' ? '-' : build.CmsSourceApp)}}
+					</a>
+          <a href="javascript:void(0)" *ngIf="(build.CmsSourceApp != '')" class="label label-success">
+            {{build.CmsExecTime}}
 					</a>
         </clr-dg-cell>
         <clr-dg-cell>
@@ -59,7 +62,8 @@
 </clr-datagrid>
 
 <add-autobuild (create)="createFinished($event)"></add-autobuild>
-<album-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></album-autobuild>
-<callback-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></callback-autobuild>
+<cms-autobuild (create)="createFinished($event)"></cms-autobuild>
 <mqtt-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></mqtt-autobuild>
+<callback-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></callback-autobuild>
 <upgrade-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"><upgrade-autobuild>
+<album-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></album-autobuild>

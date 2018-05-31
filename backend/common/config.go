@@ -26,6 +26,10 @@ type Conf struct {
 		Mode string
 	}
 	Storybox struct {
+		Cms struct {
+			Url        string
+			Supertoken string
+		}
 		Toolkit struct {
 			Database DBConf
 		}

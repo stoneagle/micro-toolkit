@@ -3,15 +3,16 @@ import { Autobuild } from '../../../../model/storybox/autobuild';
 import { AutobuildService  } from '../../../../service/storybox/autobuild.service';
 
 @Component({
-  selector: 'add-autobuild',
-  templateUrl: './add.component.html',
-  styleUrls: ['./add.component.css']
+  selector: 'cms-autobuild',
+  templateUrl: './cms.component.html',
+  styleUrls: ['./cms.component.css']
 })
 
-export class AddAutobuildComponent implements OnInit {
+export class CmsAutobuildComponent implements OnInit {
 	autobuild: Autobuild = new Autobuild;
   modelOpened: boolean = false;
-  @Output() create = new EventEmitter<boolean>();
+  alertOpened: boolean = false;
+  @Output() create = new EventEmitter<string>();
 
   constructor(
     private autobuildService: AutobuildService
@@ -20,15 +21,22 @@ export class AddAutobuildComponent implements OnInit {
   ngOnInit() {
   }
 
-  newAdd(): void {
-    this.autobuild = new Autobuild();
-    this.modelOpened = true;
+  newCms(autobuild: Autobuild): void {
+    this.autobuild = autobuild;
+    if (this.autobuild.CmsSourceApp == '') {
+      this.modelOpened = true;
+    }
   }
 
   submit(): void {
-    this.modelOpened = false;
-    this.autobuildService.add(this.autobuild)
-    .subscribe(autobuild => {
-    })
+    if (this.autobuild.CmsSourceApp != '' && this.alertOpened == false) {
+		  this.alertOpened = true;
+      this.autobuildService.execCms(this.autobuild)
+      .subscribe(res => {
+        this.modelOpened = false;
+		  	this.alertOpened = false;
+        this.create.emit("cms");
+      })
+    }
   }
 }

@@ -75,6 +75,13 @@ export class AutobuildService {
     );
   }
 
+  execCms(autobuild: Autobuild): Observable<Response> {
+    return this.http.post<Response>(AppConfig.settings.apiServer.endpoint + this.autobuildUrl + `/${autobuild.Id}/cms`, JSON.stringify(autobuild), httpOptions).pipe(
+      tap(pools => this.log(`exec cms`)),
+      catchError(this.handleError<Response>('execCms'))
+    );
+  }
+
   execCallback(autobuild: Autobuild): Observable<Response> {
     return this.http.post<Response>(AppConfig.settings.apiServer.endpoint + this.autobuildUrl + `/${autobuild.Id}/callback`, JSON.stringify(autobuild), httpOptions).pipe(
       tap(pools => this.log(`exec callback`)),

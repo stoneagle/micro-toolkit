@@ -6,6 +6,7 @@ import { AlbumAutobuildComponent } from './album/album.component';
 import { CallbackAutobuildComponent } from './callback/callback.component';
 import { MqttAutobuildComponent } from './mqtt/mqtt.component';
 import { UpgradeAutobuildComponent } from './upgrade/upgrade.component';
+import { CmsAutobuildComponent } from './cms/cms.component';
 import { AutobuildService  } from '../../../service/storybox/autobuild.service';
 
 import { BrowserModule } from '@angular/platform-browser';
@@ -23,6 +24,7 @@ import { FormsModule }   from '@angular/forms';
     CallbackAutobuildComponent,
     MqttAutobuildComponent,
     UpgradeAutobuildComponent,
+    CmsAutobuildComponent,
   ],
   imports: [
     BrowserModule,

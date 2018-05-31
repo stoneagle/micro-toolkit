@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"strconv"
+	"time"
 	"toolkit/backend/common"
 	"toolkit/backend/models"
 	"toolkit/backend/services"
@@ -103,23 +104,69 @@ func (c *AutoBuild) Create(ctx *gin.Context) {
 }
 
 func (c *AutoBuild) Delete(ctx *gin.Context) {
-	idStr := ctx.Param("id")
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		common.ResponseErrorBusiness(ctx, common.ErrorParams, "id params error", err)
-		return
-	}
-
-	err = c.AutoBuildSvc.Delete(id)
+	autobuild := ctx.MustGet("autobuild").(models.AutoBuild)
+	err := c.AutoBuildSvc.Delete(autobuild.Id)
 	if err != nil {
 		common.ResponseErrorBusiness(ctx, common.ErrorMysql, "autobuild delete error", err)
 		return
 	}
 
-	common.ResponseSuccess(ctx, id)
+	common.ResponseSuccess(ctx, autobuild.Id)
 }
 
 func (c *AutoBuild) Cms(ctx *gin.Context) {
+	var autobuild models.AutoBuild
+	if err := ctx.ShouldBindJSON(&autobuild); err != nil {
+		common.ResponseErrorBusiness(ctx, common.ErrorParams, "params error: ", err)
+		return
+	}
+
+	if autobuild.Id == 0 || autobuild.CmsSourceApp == "" {
+		common.ResponseErrorBusiness(ctx, common.ErrorParams, "id, sourceApp params can not be empty", nil)
+		return
+	}
+
+	url := c.Config.Storybox.Cms.Url
+	params := map[string]string{
+		"srcAppId": autobuild.CmsSourceApp,
+		"dstAppId": autobuild.AppId,
+		"token":    c.Config.Storybox.Cms.Supertoken,
+	}
+
+	jsonStr, err := json.Marshal(params)
+	if err != nil {
+		common.ResponseErrorBusiness(ctx, common.ErrorParams, "request json params error", err)
+		return
+	}
+
+	response, err := common.DoHttpPost(url, jsonStr, 30*time.Second)
+	if err != nil {
+		common.ResponseErrorBusiness(ctx, common.ErrorParams, "request response error", err)
+		return
+	}
+	result := common.Rres{}
+	err = json.Unmarshal(response, &result)
+	if err != nil {
+		common.ResponseErrorBusiness(ctx, common.ErrorParams, "request response unmarshal error", err)
+		return
+	}
+
+	if result.Result != 0 {
+		common.ResponseErrorBusiness(ctx, common.ErrorParams, "cms copy failed:"+result.Msg, nil)
+		return
+	}
+
+	updateAutobuild := map[string]interface{}{
+		"cms_source_app": autobuild.CmsSourceApp,
+		"cms_exec_time":  time.Now().Format("2006-01-02 15:04:05"),
+	}
+	err = c.AutoBuildSvc.UpdateByMap(autobuild.Id, updateAutobuild)
+	if err != nil {
+		common.ResponseErrorBusiness(ctx, common.ErrorMysql, "update autobuild error", err)
+		return
+	}
+
+	common.ResponseSuccess(ctx, autobuild.Id)
 }
 
 func (c *AutoBuild) Mqtt(ctx *gin.Context) {

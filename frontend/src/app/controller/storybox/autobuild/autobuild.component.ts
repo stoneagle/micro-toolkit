@@ -5,6 +5,7 @@ import { AlbumAutobuildComponent } from './album/album.component';
 import { CallbackAutobuildComponent } from './callback/callback.component';
 import { MqttAutobuildComponent } from './mqtt/mqtt.component';
 import { UpgradeAutobuildComponent } from './upgrade/upgrade.component';
+import { CmsAutobuildComponent } from './cms/cms.component';
 import { AutobuildService  } from '../../../service/storybox/autobuild.service';
 
 @Component({
@@ -23,6 +24,8 @@ export class AutobuildComponent implements OnInit {
   mqttAutobuild: MqttAutobuildComponent;
   @ViewChild(UpgradeAutobuildComponent)
   upgradeAutobuild: UpgradeAutobuildComponent;
+  @ViewChild(CmsAutobuildComponent)
+  cmsAutobuild: CmsAutobuildComponent;
 
   autobuilds: Autobuild[] = [];
 
@@ -64,7 +67,7 @@ export class AutobuildComponent implements OnInit {
   }
 
   openCmsModel(ab: Autobuild): void {
-    // this.cmsModel = true;
+    this.cmsAutobuild.newCms(ab);
   }
 
   openUpgradeModel(ab: Autobuild): void {

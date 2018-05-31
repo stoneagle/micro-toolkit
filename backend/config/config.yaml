@@ -1,6 +1,9 @@
 app:
   mode: debug 
 storybox:
+  cms:
+    url: http://cms.roobo.net/api/app/copy
+    supertoken: b9b065fe0714d483aa4146bb715f9895
   toolkit:
     database:
       name: toolkit 
