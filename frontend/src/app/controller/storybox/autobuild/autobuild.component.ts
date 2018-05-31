@@ -1,36 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Autobuild } from '../../../model/storybox/autobuild';
+import { AddAutobuildComponent } from './add/add.component';
+import { AlbumAutobuildComponent } from './album/album.component';
+import { CallbackAutobuildComponent } from './callback/callback.component';
+import { MqttAutobuildComponent } from './mqtt/mqtt.component';
+import { UpgradeAutobuildComponent } from './upgrade/upgrade.component';
 import { AutobuildService  } from '../../../service/storybox/autobuild.service';
 
 @Component({
-  providers: [AutobuildService],
   selector: 'app-autobuild',
   templateUrl: './autobuild.component.html',
   styleUrls: ['./autobuild.component.css']
 })
 export class AutobuildComponent implements OnInit {
+  @ViewChild(AddAutobuildComponent)
+  addAutobuild: AddAutobuildComponent;
+  @ViewChild(AlbumAutobuildComponent)
+  albumAutobuild: AlbumAutobuildComponent;
+  @ViewChild(CallbackAutobuildComponent)
+  callbackAutobuild: CallbackAutobuildComponent;
+  @ViewChild(MqttAutobuildComponent)
+  mqttAutobuild: MqttAutobuildComponent;
+  @ViewChild(UpgradeAutobuildComponent)
+  upgradeAutobuild: UpgradeAutobuildComponent;
+
   autobuilds: Autobuild[] = [];
-	addAutobuild: Autobuild = new Autobuild;
-	mqttAutobuild: Autobuild = new Autobuild;
-	callbackAutobuild: Autobuild = new Autobuild;
-	upgradeAutobuild: Autobuild = new Autobuild;
-	albumlistAutobuild: Autobuild = new Autobuild;
 
 	pageSize: number = 10;
 	totalCount: number = 0;
 	currentPage: number = 1;
-
-  addModel: boolean = false;
-  cmsModel: boolean = false;
-  mqttModel: boolean = false;
-  callbackModel: boolean = false;
-  upgradeModel: boolean = false;
-  albumlistModel: boolean = false;
-
-  mqttShowModel: boolean = false;
-  callbackShowModel: boolean = false;
-  upgradeShowModel: boolean = false;
-  albumlistShowModel: boolean = false;
 
   constructor(
     private autobuildService: AutobuildService
@@ -41,16 +39,66 @@ export class AutobuildComponent implements OnInit {
     this.refresh();
   }
 
-  showAddModel(): void {
-    this.addModel = true;
+  createAutobuild(created: boolean):void {
+    if (created) {
+      this.refresh();
+    }
   }
 
-  submitAdd(): void {
-    this.addModel = false;
-    this.autobuildService.add(this.addAutobuild)
-    .subscribe(autobuild => {
-      this.autobuilds.push(autobuild);
-    })
+  execUpgrade(created: boolean): void {
+    if (created) {
+      this.refresh();
+    }
+  }
+
+  execAlbum(created: boolean): void {
+    if (created) {
+      this.refresh();
+    }
+  }
+
+  execCallback(created: boolean): void {
+    if (created) {
+      this.refresh();
+    }
+  }
+
+	execMqtt(created: boolean): void {
+    if (created) {
+      this.refresh();
+    }
+	}
+
+  openAlbumModel(ab: Autobuild): void {
+    if (ab.AlbumList == '') {
+      this.albumAutobuild.newAlbum(ab);
+    }
+  }
+
+  openCallbackModel(ab: Autobuild): void {
+    if (ab.Callback == '') {
+      this.callbackAutobuild.newCallback(ab);
+    }
+  }
+
+  openMqttModel(ab: Autobuild): void {
+    if (ab.Mqtt == 0) {
+      this.mqttAutobuild.newMqtt(ab);
+    }
+  }
+
+  openCmsModel(ab: Autobuild): void {
+    // this.cmsModel = true;
+  }
+
+  openUpgradeModel(ab: Autobuild): void {
+    if (ab.UpgradeName == '') {
+      this.upgradeAutobuild.newUpgrade(ab);
+    }
+  }
+
+  openAddModel(): void {
+    this.addAutobuild.newAdd();
   }
 
   delete(ab: Autobuild): void {
@@ -58,76 +106,6 @@ export class AutobuildComponent implements OnInit {
     .subscribe(autobuild => {
       this.refresh();
     })
-  }
-
-  showCmsModel(ab: Autobuild): void {
-    this.cmsModel = true;
-  }
-
-  showMqttModel(ab: Autobuild): void {
-    if (ab.Mqtt == 0) {
-      this.mqttAutobuild = ab;
-      this.mqttModel = true;
-    }
-  }
-
-	execMqtt(): void {
-    this.autobuildService.execMqtt(this.mqttAutobuild.Id)
-    .subscribe(res => {
-      this.mqttModel = false;
-      this.refresh();
-    })
-	}
-
-  showCallbackModel(ab: Autobuild): void {
-    if (ab.Callback == '') {
-      this.callbackAutobuild = ab;
-      this.callbackModel = true;
-    }
-  }
-
-  execCallback(): void {
-    if (this.callbackAutobuild.Callback != '') {
-      this.autobuildService.execCallback(this.callbackAutobuild)
-      .subscribe(res => {
-        this.callbackModel = false;
-        this.refresh();
-      })
-    }
-  }
-
-  showUpgradeModel(ab: Autobuild): void {
-    if (ab.UpgradeName == '') {
-      this.upgradeAutobuild = ab;
-      this.upgradeModel = true;
-    }
-  }
-
-  execUpgrade(): void {
-    if (this.upgradeAutobuild.UpgradeName != '' && this.upgradeAutobuild.UpgradeVcode != 0) {
-      this.autobuildService.execUpgrade(this.upgradeAutobuild)
-      .subscribe(res => {
-        this.upgradeModel = false;
-        this.refresh();
-      })
-    }
-  }
-
-  showAlbumListModel(ab: Autobuild): void {
-    if (ab.AlbumList == '') {
-      this.albumlistAutobuild = ab;
-      this.albumlistModel = true;
-    }
-  }
-
-  execAlbum(): void {
-    if (this.albumlistAutobuild.AlbumList != '') {
-      this.autobuildService.execAlbum(this.albumlistAutobuild)
-      .subscribe(res => {
-        this.albumlistModel = false;
-        this.refresh();
-      })
-    }
   }
 
 	load(state: any): void {

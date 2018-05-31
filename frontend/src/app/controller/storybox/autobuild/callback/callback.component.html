@@ -1,0 +1,19 @@
+
+<clr-modal [(clrModalOpen)]="modelOpened">
+    <h3 class="modal-title">创建callback</h3>
+    <div class="modal-body">
+			<form #callbackForm="ngForm" (ngSubmit)="submit()">
+				<div class="form-group">
+					<label for="Callback">回调类别</label>
+					<div class="select">
+							<select id="Callback" [(ngModel)]="autobuild.Callback" name="Callback">
+									<option value="tongmi">童秘</option>
+									<option value="rtoy">故事机</option>
+							</select>
+					</div>
+				</div>
+				<button type="submit" class="btn btn-success">Submit</button>
+        <button type="button" class="btn btn-primary" (click)="modelOpened = false">Cancel</button>
+			</form>
+    </div>
+</clr-modal>

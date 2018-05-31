@@ -1,0 +1,21 @@
+<clr-modal [(clrModalOpen)]="modelOpened">
+    <h3 class="modal-title">创建upgrade</h3>
+    <div class="modal-body">
+			<form #upgradeForm="ngForm" (ngSubmit)="submit()">
+				<div class="form-group">
+					<label for="Upgrade">Name</label>
+					<input type="text" class="form-control" id="UpgradeName" required [(ngModel)]="autobuild.UpgradeName" name="UpgradeName" >
+				</div>
+				<div class="form-group">
+					<label for="UpgradeVcode">Vcode</label>
+					<input type="number" class="form-control" id="UpgradeVcode" required [(ngModel)]="autobuild.UpgradeVcode" name="UpgradeVcode" >
+				</div>
+				<div class="form-group">
+					<label for="UpgradeVname">Vname</label>
+					<input type="text" class="form-control" id="UpgradeVname" [(ngModel)]="autobuild.UpgradeVname" name="UpgradeVname" >
+				</div>
+				<button type="submit" class="btn btn-success">Submit</button>
+        <button type="button" class="btn btn-primary" (click)="modelOpened = false">Cancel</button>
+			</form>
+    </div>
+</clr-modal>

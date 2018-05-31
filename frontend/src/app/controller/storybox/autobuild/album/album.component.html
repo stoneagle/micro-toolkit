@@ -1,0 +1,14 @@
+<clr-modal [(clrModalOpen)]="modelOpened">
+    <h3 class="modal-title">创建预置歌单</h3>
+    <div class="modal-body">
+			<form #albumForm="ngForm" (ngSubmit)="submit()">
+				<div class="form-group">
+					<label for="AlbumList">歌单ID</label>
+					<input type="text" class="form-control" id="AlbumList" required [(ngModel)]="autobuild.AlbumList" name="AlbumList" placeholder="用逗号分隔">
+				</div>
+				<button type="submit" class="btn btn-success">Submit</button>
+        <button type="button" class="btn btn-primary" (click)="modelOpened = false">Cancel</button>
+			</form>
+    </div>
+</clr-modal>
+

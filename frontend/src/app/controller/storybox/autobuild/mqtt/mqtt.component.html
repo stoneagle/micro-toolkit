@@ -1,0 +1,46 @@
+<clr-modal [(clrModalOpen)]="modelOpened">
+    <h3 class="modal-title">执行mqtt</h3>
+    <div class="modal-body">
+			<div class="alert alert-danger">
+					<div class="alert-items">
+							<div class="alert-item static">
+									<div class="alert-icon-wrapper">
+											<clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
+									</div>
+									<span class="alert-text">
+											是否执行mqtt操作	
+									</span>
+							</div>
+					</div>
+			</div>
+      <button type="button" (click)="submit()" class="btn btn-success">Exec</button>
+      <button type="button" class="btn btn-primary" (click)="modelOpened = false">Cancel</button>
+    </div>
+</clr-modal>
+
+<clr-modal [(clrModalOpen)]="showOpened">
+    <h3 class="modal-title">mqtt配置</h3>
+    <div class="modal-body">
+      <clr-datagrid>
+          <clr-dg-column>ID</clr-dg-column>
+          <clr-dg-column>ChannelType</clr-dg-column>
+          <clr-dg-column>Production</clr-dg-column>
+          <clr-dg-column>Service</clr-dg-column>
+          <clr-dg-column>Params</clr-dg-column>
+          <clr-dg-column>创建时间</clr-dg-column>
+          <clr-dg-column>更新时间</clr-dg-column>
+
+          <clr-dg-row *ngFor="let one of mqtts">
+              <clr-dg-cell>{{one.Id}}</clr-dg-cell>
+              <clr-dg-cell>{{one.ChannelType}}</clr-dg-cell>
+              <clr-dg-cell>{{one.Production}}</clr-dg-cell>
+              <clr-dg-cell>{{one.Service}}</clr-dg-cell>
+              <clr-dg-cell>{{one.Params}}</clr-dg-cell>
+              <clr-dg-cell>{{one.CreatedAt}}</clr-dg-cell>
+              <clr-dg-cell>{{one.UPdatedAt}}</clr-dg-cell>
+          </clr-dg-row>
+      </clr-datagrid>
+      <button type="button" (click)="rollback()" class="btn btn-success">Rollback</button>
+      <button type="button" class="btn btn-primary" (click)="showOpened = false">Cancel</button>
+    </div>
+</clr-modal>
