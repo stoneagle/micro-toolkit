@@ -53,8 +53,10 @@ func (u *CmsPresetAlbums) Add(autobuildId int, albumList string) (err error) {
 	}
 
 	// TODO,增量配置
-	autobuild.AlbumList = albumList
-	_, err = sessionTK.Update(&autobuild)
+	updateAutobuild := models.AutoBuild{
+		AlbumList: albumList,
+	}
+	_, err = sessionTK.Where("id = ?", autobuild.Id).Update(&updateAutobuild)
 	if err != nil {
 		sessionTK.Rollback()
 		sessionAL.Rollback()

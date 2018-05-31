@@ -1,4 +1,9 @@
-<clr-datagrid>
+<button class="btn btn-primary" (click)="showAddModel()">新建</button> 
+<span class="refresh-btn" (click)="refresh()">
+  <clr-icon shape="refresh"></clr-icon>
+</span>
+<clr-datagrid (clrDgRefresh)="load($event)">
+    <clr-dg-column>ID</clr-dg-column>
     <clr-dg-column>appID</clr-dg-column>
     <clr-dg-column>cms配置</clr-dg-column>
     <clr-dg-column>mqtt接入</clr-dg-column>
@@ -7,17 +12,164 @@
     <clr-dg-column>预置歌单</clr-dg-column>
     <clr-dg-column>创建时间</clr-dg-column>
     <clr-dg-column>更新时间</clr-dg-column>
+    <clr-dg-column>操作</clr-dg-column>
 
     <clr-dg-row *ngFor="let build of autobuilds">
-        <clr-dg-cell>{{build.appId}}</clr-dg-cell>
-        <clr-dg-cell>{{build.cms}}</clr-dg-cell>
-        <clr-dg-cell>{{build.mqtt}}</clr-dg-cell>
-        <clr-dg-cell>{{build.callback}}</clr-dg-cell>
-        <clr-dg-cell>{{build.upgrade}}</clr-dg-cell>
-        <clr-dg-cell>{{build.album}}</clr-dg-cell>
-        <clr-dg-cell>{{build.createAt}}</clr-dg-cell>
-        <clr-dg-cell>{{build.updateAt}}</clr-dg-cell>
+        <clr-dg-cell>{{build.Id}}</clr-dg-cell>
+        <clr-dg-cell>{{build.AppId}}</clr-dg-cell>
+        <clr-dg-cell>
+          <a href="javascript:void(0)" (click)="showCmsModel(build)" [ngClass]="(build.CmsSourceApp=='')?'label label-danger clickable':'label label-success clickable'">
+            {{(build.CmsSourceApp === '' ? '-' : build.CmsSourceApp)}}
+					</a>
+        </clr-dg-cell>
+        <clr-dg-cell>
+          <a href="javascript:void(0)" (click)="showMqttModel(build)" [ngClass]="(build.Mqtt==0)?'label label-danger clickable':'label label-success clickable'">
+            {{(build.Mqtt === 0 ? '-' : '已配置')}}
+					</a>
+        </clr-dg-cell>
+        <clr-dg-cell>
+          <a href="javascript:void(0)" (click)="showCallbackModel(build)" [ngClass]="(build.Callback=='')?'label label-danger clickable':'label label-success clickable'">
+            {{(build.Callback === '' ? '-' : build.Callback)}}
+					</a>
+        </clr-dg-cell>
+        <clr-dg-cell>
+          <a href="javascript:void(0)" (click)="showUpgradeModel(build)" [ngClass]="(build.UpgradeName=='')?'label label-danger clickable':'label label-success clickable'">
+            {{(build.UpgradeName === '' ? '-' : build.UpgradeName)}}
+					</a>
+        </clr-dg-cell>
+        <clr-dg-cell>
+          <a href="javascript:void(0)" (click)="showAlbumListModel(build)" [ngClass]="(build.AlbumList=='')?'label label-danger clickable':'label label-success clickable'">
+            {{(build.AlbumList === '' ? '-' : build.AlbumList)}}
+          </a>
+        </clr-dg-cell>
+        <clr-dg-cell>{{build.CreatedAt | date: 'short'}}</clr-dg-cell>
+        <clr-dg-cell>{{build.UpdatedAt | date: 'short'}}</clr-dg-cell>
+        <clr-dg-cell>
+          <button *ngIf="(build.Callback == '') && (build.Mqtt == 0) && (build.UpgradeName == '') && (build.AlbumList == '')" (click)="delete(build)" type="button" class="btn btn-sm btn-icon btn-danger">
+						<clr-icon shape="error-standard"></clr-icon>
+					</button>
+        </clr-dg-cell>
     </clr-dg-row>
-
-    <clr-dg-footer>{{users.length}} users</clr-dg-footer>
+		<clr-dg-footer>
+				<clr-dg-pagination #pagination [clrDgPageSize]="pageSize" [(clrDgPage)]="currentPage" [clrDgTotalItems]="totalCount">
+						{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+						of {{pagination.totalItems}} autobuilds
+				</clr-dg-pagination>
+		</clr-dg-footer>
 </clr-datagrid>
+
+<clr-modal [(clrModalOpen)]="addModel">
+    <h3 class="modal-title">创建自动化配置</h3>
+    <div class="modal-body">
+			<form #addForm="ngForm" (ngSubmit)="submitAdd()">
+				<div class="form-group">
+					<label for="name">目标AppId</label>
+					<input type="text" class="form-control" id="AppId" required [(ngModel)]="addAutobuild.AppId" name="AppId" >
+				</div>
+				<button type="submit" class="btn btn-success">Submit</button>
+        <button type="button" class="btn btn-primary" (click)="addModel = false">Cancel</button>
+			</form>
+    </div>
+</clr-modal>
+
+<clr-modal [(clrModalOpen)]="mqttModel">
+    <h3 class="modal-title">执行mqtt</h3>
+    <div class="modal-body">
+			<div class="alert alert-danger">
+					<div class="alert-items">
+							<div class="alert-item static">
+									<div class="alert-icon-wrapper">
+											<clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
+									</div>
+									<span class="alert-text">
+											是否执行mqtt操作	
+									</span>
+							</div>
+					</div>
+			</div>
+      <button type="button" (click)="execMqtt()" class="btn btn-success">Exec</button>
+      <button type="button" class="btn btn-primary" (click)="mqttModel = false">Cancel</button>
+    </div>
+</clr-modal>
+
+<clr-modal [(clrModalOpen)]="callbackModel">
+    <h3 class="modal-title">创建callback</h3>
+    <div class="modal-body">
+			<form #callbackForm="ngForm" (ngSubmit)="execCallback()">
+				<div class="form-group">
+					<label for="Callback">回调类别</label>
+					<div class="select">
+							<select id="Callback" [(ngModel)]="callbackAutobuild.Callback" name="Callback">
+									<option value="tongmi">童秘</option>
+									<option value="rtoy">故事机</option>
+							</select>
+					</div>
+				</div>
+				<button type="submit" class="btn btn-success">Submit</button>
+        <button type="button" class="btn btn-primary" (click)="callbackModel = false">Cancel</button>
+			</form>
+    </div>
+</clr-modal>
+
+<clr-modal [(clrModalOpen)]="upgradeModel">
+    <h3 class="modal-title">创建upgrade</h3>
+    <div class="modal-body">
+			<form #upgradeForm="ngForm" (ngSubmit)="execUpgrade()">
+				<div class="form-group">
+					<label for="Upgrade">Name</label>
+					<input type="text" class="form-control" id="UpgradeName" required [(ngModel)]="upgradeAutobuild.UpgradeName" name="UpgradeName" >
+				</div>
+				<div class="form-group">
+					<label for="UpgradeVcode">Vcode</label>
+					<input type="number" class="form-control" id="UpgradeVcode" required [(ngModel)]="upgradeAutobuild.UpgradeVcode" name="UpgradeVcode" >
+				</div>
+				<div class="form-group">
+					<label for="UpgradeVname">Vname</label>
+					<input type="text" class="form-control" id="UpgradeVname" [(ngModel)]="upgradeAutobuild.UpgradeVname" name="UpgradeVname" >
+				</div>
+				<button type="submit" class="btn btn-success">Submit</button>
+        <button type="button" class="btn btn-primary" (click)="upgradeModel = false">Cancel</button>
+			</form>
+    </div>
+</clr-modal>
+
+<clr-modal [(clrModalOpen)]="albumlistModel">
+    <h3 class="modal-title">创建预置歌单</h3>
+    <div class="modal-body">
+			<form #albumForm="ngForm" (ngSubmit)="execAlbum()">
+				<div class="form-group">
+					<label for="AlbumList">歌单ID</label>
+					<input type="text" class="form-control" id="AlbumList" required [(ngModel)]="albumlistAutobuild.AlbumList" name="AlbumList" placeholder="用逗号分隔">
+				</div>
+				<button type="submit" class="btn btn-success">Submit</button>
+        <button type="button" class="btn btn-primary" (click)="albumlistModel = false">Cancel</button>
+			</form>
+    </div>
+</clr-modal>
+
+<clr-modal [(clrModalOpen)]="mqttShowModel">
+    <h3 class="modal-title">mqtt配置</h3>
+    <div class="modal-body">
+      <clr-datagrid>
+          <clr-dg-column>ID</clr-dg-column>
+          <clr-dg-column>ChannelType</clr-dg-column>
+          <clr-dg-column>Production</clr-dg-column>
+          <clr-dg-column>Service</clr-dg-column>
+          <clr-dg-column>Params</clr-dg-column>
+          <clr-dg-column>创建时间</clr-dg-column>
+          <clr-dg-column>更新时间</clr-dg-column>
+
+          <clr-dg-row *ngFor="let one of mqtts">
+              <clr-dg-cell>{{one.Id}}</clr-dg-cell>
+              <clr-dg-cell>{{one.ChannelType}}</clr-dg-cell>
+              <clr-dg-cell>{{one.Production}}</clr-dg-cell>
+              <clr-dg-cell>{{one.Service}}</clr-dg-cell>
+              <clr-dg-cell>{{one.Params}}</clr-dg-cell>
+              <clr-dg-cell>{{one.CreatedAt}}</clr-dg-cell>
+              <clr-dg-cell>{{one.UPdatedAt}}</clr-dg-cell>
+          </clr-dg-row>
+      </clr-datagrid>
+      <button type="button" (click)="rollbackMqtt()" class="btn btn-success">Rollback</button>
+      <button type="button" class="btn btn-primary" (click)="mqttShowModel = false">Cancel</button>
+    </div>
+</clr-modal>

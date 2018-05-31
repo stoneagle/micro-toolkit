@@ -1,10 +1,12 @@
-hash: c0108d4d22de78243a5576d1e37823c161b314b7a0c9e482e7b7095a0eb543db
-updated: 2018-05-19T15:07:10.156204056+08:00
+hash: 2f4e07a34d16f3ef0e10c95ff3e2d4828cc574cfa773b18c30d5e3eb20bbb655
+updated: 2018-05-30T13:54:22.943608296+08:00
 imports:
+- name: github.com/gin-contrib/cors
+  version: cf4846e6a636a76237a28d9286f163c132e841bc
 - name: github.com/gin-contrib/sse
   version: 22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae
 - name: github.com/gin-gonic/gin
-  version: bf7803815b0baa22ff7a10457932882dfbf09925
+  version: 07cbe116a058f13026fa6b23f675155968d47cc3
   subpackages:
   - binding
   - json
@@ -18,11 +20,11 @@ imports:
 - name: github.com/go-xorm/xorm
   version: d85bb4911c725a53b135fc12862748a41b6c07da
 - name: github.com/golang/protobuf
-  version: 70c277a8a150a8e069492e6600926300405c2884
+  version: 3a3da3a4e26776cc22a79ef46d5d58477532dede
   subpackages:
   - proto
 - name: github.com/json-iterator/go
-  version: 2ddf6d758266fcb080a4f9e054b9f292c85e6798
+  version: 8744d7c5c7b40a53e018f78d8c508b3315260b96
 - name: github.com/mattn/go-isatty
   version: 6ca4dbf54d38eea1a992b3c722a76a5d1c4cb25c
 - name: github.com/modern-go/concurrent
@@ -38,7 +40,7 @@ imports:
   subpackages:
   - atomic
 - name: golang.org/x/sys/unix
-  version: 7c87d13f8e835d2fb3a70a2912c811ed0c1d241b
+  version: c11f84a56e43e20a78cee75a7c034031ecf57d1f
 - name: gopkg.in/go-playground/validator.v8
   version: 5f1438d3fca68893a817e4a66806cea46a9e4ebf
 - name: gopkg.in/yaml.v2

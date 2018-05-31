@@ -6,6 +6,7 @@ import (
 	"toolkit/backend/common"
 	"toolkit/backend/controllers"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
@@ -18,6 +19,20 @@ func Boot(app *gin.Engine) {
 	setProjectEngine(conf.Storybox.Callback.Database)
 	setProjectEngine(conf.Storybox.Upgrade.Database)
 	setProjectEngine(conf.Storybox.Album.Database)
+
+	if conf.App.Mode == "debug" {
+		app.Use(cors.New(cors.Config{
+			AllowHeaders:     []string{"Content-Type", "Access-Control-Allow-Origin"},
+			AllowMethods:     []string{"GET", "POST", "DELETE", "PUT", "PATCH"},
+			AllowCredentials: true,
+			AllowOrigins:     []string{"http://localhost:8080"},
+			ExposeHeaders:    []string{"Content-Length"},
+			AllowOriginFunc: func(origin string) bool {
+				return origin == "https://localhost:6999"
+			},
+			MaxAge: 12 * time.Hour,
+		}))
+	}
 
 	toolkit := app.Group("/toolkit")
 	{

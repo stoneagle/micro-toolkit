@@ -25,6 +25,7 @@ func (c *AutoBuild) Router(router *gin.RouterGroup) {
 	autobuilds := router.Group("autobuild")
 	autobuilds.GET("", c.List)
 	autobuilds.POST("", c.Create)
+	autobuilds.DELETE("/:id", c.Delete)
 	autobuilds.POST("/:id/cms", c.Cms)
 	autobuilds.POST("/:id/mqtt", c.Mqtt)
 	autobuilds.POST("/:id/callback", c.Callback)
@@ -33,31 +34,59 @@ func (c *AutoBuild) Router(router *gin.RouterGroup) {
 }
 
 func (c *AutoBuild) List(ctx *gin.Context) {
+	engine := common.GetEngine(c.Config.Storybox.Toolkit.Database.Name)
+	svc := services.NewAutoBuild(engine)
+	autobuilds, err := svc.GetList()
+	if err != nil {
+		c.ErrorBusiness(ctx, common.ErrorMysql, "autobuild get error", err)
+		return
+	}
+	c.Success(ctx, autobuilds)
 }
 
 func (c *AutoBuild) Create(ctx *gin.Context) {
-	appId := ctx.PostForm("appId")
-	if appId == "" {
-		c.ErrorBusiness(ctx, common.ErrorParams, "appId params not exist", nil)
+	var autobuild models.AutoBuild
+	if err := ctx.ShouldBindJSON(&autobuild); err != nil {
+		c.ErrorBusiness(ctx, common.ErrorParams, "params error: ", err)
 		return
 	}
 
 	engine := common.GetEngine(c.Config.Storybox.Toolkit.Database.Name)
-	autobuild := models.AutoBuild{
-		AppId: appId,
-	}
-
 	_, err := engine.Insert(&autobuild)
 	if err != nil {
 		c.ErrorBusiness(ctx, common.ErrorMysql, "autobuild insert error", err)
 		return
 	}
 
-	c.Success(ctx, autobuild.Id)
+	c.Success(ctx, autobuild)
+}
+
+func (c *AutoBuild) Delete(ctx *gin.Context) {
+	idStr := ctx.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.ErrorBusiness(ctx, common.ErrorParams, "id params error", err)
+		return
+	}
+
+	engine := common.GetEngine(c.Config.Storybox.Toolkit.Database.Name)
+	var autobuild models.AutoBuild
+	_, err = engine.Id(id).Get(&autobuild)
+	if err != nil {
+		c.ErrorBusiness(ctx, common.ErrorMysql, "autobuild get error", err)
+		return
+	}
+
+	_, err = engine.Id(id).Delete(&autobuild)
+	if err != nil {
+		c.ErrorBusiness(ctx, common.ErrorMysql, "autobuild delete error", err)
+		return
+	}
+
+	c.Success(ctx, id)
 }
 
 func (c *AutoBuild) Cms(ctx *gin.Context) {
-
 }
 
 func (c *AutoBuild) Mqtt(ctx *gin.Context) {
@@ -81,97 +110,84 @@ func (c *AutoBuild) Mqtt(ctx *gin.Context) {
 }
 
 func (c *AutoBuild) Callback(ctx *gin.Context) {
-	idStr := ctx.Param("id")
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		c.ErrorBusiness(ctx, common.ErrorParams, "id params error", err)
+	var autobuild models.AutoBuild
+	if err := ctx.ShouldBindJSON(&autobuild); err != nil {
+		c.ErrorBusiness(ctx, common.ErrorParams, "params error: ", err)
 		return
 	}
+
+	if autobuild.Id == 0 || autobuild.Callback == "" {
+		c.ErrorBusiness(ctx, common.ErrorParams, "id or callback params not exist", nil)
+		return
+	}
+
 	engineTK := common.GetEngine(c.Config.Storybox.Toolkit.Database.Name)
 	engineCB := common.GetEngine(c.Config.Storybox.Callback.Database.Name)
 
-	ctype := ctx.PostForm("ctype")
-	if ctype == "" {
-		c.ErrorBusiness(ctx, common.ErrorParams, "ctype can not be empty", err)
-		return
-	}
-
 	templateConfig := c.Config.Storybox.Callback.Config
 	var templateMap map[string][]models.CallbackTemplate
-	err = json.Unmarshal([]byte(templateConfig), &templateMap)
+	err := json.Unmarshal([]byte(templateConfig), &templateMap)
 	if err != nil {
 		c.ErrorBusiness(ctx, common.ErrorParams, "callback config can not exec json unmarshal", err)
 		return
 	}
 
-	templateSlice, ok := templateMap[ctype]
+	templateSlice, ok := templateMap[autobuild.Callback]
 	if !ok {
 		c.ErrorBusiness(ctx, common.ErrorParams, "type relate config not exist", nil)
 		return
 	}
 
 	svc := services.NewCallbackConfig(engineTK, engineCB)
-	err = svc.Add(id, templateSlice, ctype)
+	err = svc.Add(int(autobuild.Id), templateSlice, autobuild.Callback)
 	if err != nil {
 		c.ErrorBusiness(ctx, common.ErrorMysql, "callback配置失败", err)
 		return
 	}
 
-	c.Success(ctx, id)
+	c.Success(ctx, autobuild.Id)
 }
 
 func (c *AutoBuild) Upgrade(ctx *gin.Context) {
-	idStr := ctx.Param("id")
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		c.ErrorBusiness(ctx, common.ErrorParams, "id params error", err)
+	var autobuild models.AutoBuild
+	if err := ctx.ShouldBindJSON(&autobuild); err != nil {
+		c.ErrorBusiness(ctx, common.ErrorParams, "params error: ", err)
 		return
 	}
 
-	name := ctx.PostForm("name")
-	vcodeStr := ctx.PostForm("vcode")
-	vname := ctx.PostForm("vname")
-	if name == "" || vcodeStr == "" {
-		c.ErrorBusiness(ctx, common.ErrorParams, "name or vcode params can not be empty", err)
-		return
-	}
-	vcode, err := strconv.Atoi(vcodeStr)
-	if err != nil {
-		c.ErrorBusiness(ctx, common.ErrorParams, "vcode params error", err)
+	if autobuild.Id == 0 || autobuild.UpgradeName == "" || autobuild.UpgradeVcode == 0 {
+		c.ErrorBusiness(ctx, common.ErrorParams, "id, name or vcode params can not be empty", nil)
 		return
 	}
 
 	engineTK := common.GetEngine(c.Config.Storybox.Toolkit.Database.Name)
 	engineUP := common.GetEngine(c.Config.Storybox.Upgrade.Database.Name)
 	svc := services.NewUpUpdate(engineTK, engineUP)
-	err = svc.Add(id, vcode, name, vname)
+	err := svc.Add(int(autobuild.Id), int(autobuild.UpgradeVcode), autobuild.UpgradeName, autobuild.UpgradeVname)
 	if err != nil {
 		c.ErrorBusiness(ctx, common.ErrorMysql, "upgrade配置失败", err)
 		return
 	}
-	c.Success(ctx, id)
+	c.Success(ctx, int(autobuild.Id))
 }
 
 func (c *AutoBuild) Album(ctx *gin.Context) {
-	idStr := ctx.Param("id")
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		c.ErrorBusiness(ctx, common.ErrorParams, "id params error", err)
+	var autobuild models.AutoBuild
+	if err := ctx.ShouldBindJSON(&autobuild); err != nil {
+		c.ErrorBusiness(ctx, common.ErrorParams, "params error: ", err)
 		return
 	}
-	albumList := ctx.PostForm("albumList")
-	if albumList == "" {
-		c.ErrorBusiness(ctx, common.ErrorParams, "albumList params can not be empty", err)
+	if autobuild.Id == 0 || autobuild.AlbumList == "" {
+		c.ErrorBusiness(ctx, common.ErrorParams, "id and albumList params can not be empty", nil)
 		return
 	}
-
 	engineTK := common.GetEngine(c.Config.Storybox.Toolkit.Database.Name)
 	engineAL := common.GetEngine(c.Config.Storybox.Album.Database.Name)
 	svc := services.NewCmsPresetAlbums(engineTK, engineAL)
-	err = svc.Add(id, albumList)
+	err := svc.Add(int(autobuild.Id), autobuild.AlbumList)
 	if err != nil {
 		c.ErrorBusiness(ctx, common.ErrorMysql, "albumlist配置失败", err)
 		return
 	}
-	c.Success(ctx, id)
+	c.Success(ctx, int(autobuild.Id))
 }

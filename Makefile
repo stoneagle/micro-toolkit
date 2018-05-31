@@ -12,3 +12,6 @@ stop-web:
 	cd hack && docker-compose -p "$(PROJECT)-web-$(USER)" stop 
 rm-web: 
 	cd hack && docker-compose -p "$(PROJECT)-web-$(USER)" rm 
+
+build-golang:
+	cd hack && docker build -f ./Dockerfile -t toolkit/golang:1.10 .

@@ -52,6 +52,7 @@ func (p *PushChannel) Add(autobuildId int, paramsJson string) (err error) {
 		Production:  "storybox",
 		Service:     "mqtt",
 		Params:      paramsJson,
+		Status:      1,
 	}
 	_, err = sessionMqtt.Insert(&mqtt)
 	if err != nil {
@@ -61,7 +62,10 @@ func (p *PushChannel) Add(autobuildId int, paramsJson string) (err error) {
 	}
 
 	autobuild.Mqtt = 1
-	_, err = sessionTK.Update(&autobuild)
+	updateAutobuild := models.AutoBuild{
+		Mqtt: 1,
+	}
+	_, err = sessionTK.Where("id = ?", autobuild.Id).Update(&updateAutobuild)
 	if err != nil {
 		sessionTK.Rollback()
 		sessionMqtt.Rollback()

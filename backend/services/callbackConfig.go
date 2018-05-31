@@ -47,8 +47,10 @@ func (u *CallbackConfig) Add(autobuildId int, templateSlice []models.CallbackTem
 		}
 	}
 
-	autobuild.Callback = ctype
-	_, err = sessionTK.Update(&autobuild)
+	updateAutobuild := models.AutoBuild{
+		Callback: ctype,
+	}
+	_, err = sessionTK.Where("id = ?", autobuild.Id).Update(&updateAutobuild)
 	if err != nil {
 		sessionTK.Rollback()
 		sessionCB.Rollback()

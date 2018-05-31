@@ -1,10 +1,17 @@
-export class AutoBuild {
-  appId: number; 
-  cms: string;
-  mqtt: boolean;
-  callback: boolean;
-  upgrade: boolean;
-  album: boolean;
-  createAt: string;
-  updateAt: string;
+import { Serializable } from '../app.serializable.model';
+
+export class Autobuild extends Serializable {
+  Id: number;
+  AppId: number; 
+  CmsSourceApp: string;
+  CmsExecTime: string;
+  Mqtt: number;
+  Callback: string;
+  UpgradeName: string;
+  UpgradeVcode: number;
+  UpgradeVname: string;
+  AlbumList: string;
+  CreateAt: string;
+  UpdateAt: string;
+  DeleteAt: string;
 }
