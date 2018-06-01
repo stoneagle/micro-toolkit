@@ -30,7 +30,9 @@
               <clr-dg-cell>{{one.UPdatedAt}}</clr-dg-cell>
           </clr-dg-row>
       </clr-datagrid>
-      <button type="button" (click)="rollback()" class="btn btn-success">Rollback</button>
-      <button type="button" class="btn btn-primary" (click)="showOpened = false">Cancel</button>
+      <div>
+        <button type="button" (click)="rollback()" class="btn btn-success">Rollback</button>
+        <button type="button" class="btn btn-primary" (click)="showOpened = false">Cancel</button>
+      </div>
     </div>
 </clr-modal>

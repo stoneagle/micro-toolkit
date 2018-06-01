@@ -1,5 +1,5 @@
 app:
-  mode: debug 
+  mode: dev
   BasicAuth: "{\"admin\":\"123456\"}"
 storybox:
   cms:

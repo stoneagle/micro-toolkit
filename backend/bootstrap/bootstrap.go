@@ -20,6 +20,13 @@ var (
 )
 
 func Boot(app *gin.Engine) {
+	app.StaticFS("/static", http.Dir("./static"))
+	app.StaticFS("/assets", http.Dir("./static/assets"))
+	app.StaticFile("/favicon.ico", "./static/favicon.ico")
+	app.GET("", func(c *gin.Context) {
+		c.File("./static/index.html")
+	})
+
 	store := sessions.NewCookieStore([]byte("secret"))
 	app.Use(sessions.Sessions("session", store))
 
@@ -35,7 +42,7 @@ func Boot(app *gin.Engine) {
 			AllowHeaders:     []string{"Content-Type", "Access-Control-Allow-Origin", "Authorization"},
 			AllowMethods:     []string{"GET", "POST", "DELETE", "PUT", "PATCH"},
 			AllowCredentials: true,
-			AllowOrigins:     []string{"http://localhost:8080"},
+			AllowOrigins:     []string{"http://localhost:8080", "http://localhost:6999"},
 			ExposeHeaders:    []string{"Content-Length"},
 			AllowOriginFunc: func(origin string) bool {
 				return origin == "https://localhost:6999"

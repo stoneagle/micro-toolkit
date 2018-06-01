@@ -4,3 +4,5 @@ backend/vendor/*
 .*.swp
 backend/.*.swp
 backend/*/.*.swp
+release/*
+backend/static/*
