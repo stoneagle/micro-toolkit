@@ -1,0 +1,8 @@
+{
+  "app": {
+    "company": "Toolkit"
+  },
+	"apiServer": {
+		"endpoint": "http://localhost:6999/toolkit"
+	}
+}

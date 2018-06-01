@@ -1,10 +1,23 @@
-hash: c0108d4d22de78243a5576d1e37823c161b314b7a0c9e482e7b7095a0eb543db
-updated: 2018-05-19T15:07:10.156204056+08:00
+hash: e38eed76d1e8f4c0ff66ca782cfca9332845717880a30bbd1bbababc0ffc57d1
+updated: 2018-05-31T17:55:00.149962267+08:00
 imports:
+- name: github.com/boj/redistore
+  version: 4562487a4bee9a7c272b72bfaeda4917d0a47ab9
+- name: github.com/garyburd/redigo
+  version: 569eae59ada904ea8db7a225c2b47165af08735a
+  subpackages:
+  - internal
+  - redis
+- name: github.com/gin-contrib/cors
+  version: cf4846e6a636a76237a28d9286f163c132e841bc
 - name: github.com/gin-contrib/sse
   version: 22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae
+- name: github.com/gin-gonic/contrib
+  version: 6ea35d32286ce194572a0dc2a3398aac0091228d
+  subpackages:
+  - sessions
 - name: github.com/gin-gonic/gin
-  version: bf7803815b0baa22ff7a10457932882dfbf09925
+  version: caf3e350a548af1add9def68087ac53d1d000caa
   subpackages:
   - binding
   - json
@@ -18,11 +31,17 @@ imports:
 - name: github.com/go-xorm/xorm
   version: d85bb4911c725a53b135fc12862748a41b6c07da
 - name: github.com/golang/protobuf
-  version: 70c277a8a150a8e069492e6600926300405c2884
+  version: 3a3da3a4e26776cc22a79ef46d5d58477532dede
   subpackages:
   - proto
+- name: github.com/gorilla/context
+  version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
+- name: github.com/gorilla/securecookie
+  version: b009e17e9cb1a3b7b447cf9dc0110fcaebcc1b6b
+- name: github.com/gorilla/sessions
+  version: 9ee0d62e031e098d6353a069417bd6be8015af45
 - name: github.com/json-iterator/go
-  version: 2ddf6d758266fcb080a4f9e054b9f292c85e6798
+  version: 8744d7c5c7b40a53e018f78d8c508b3315260b96
 - name: github.com/mattn/go-isatty
   version: 6ca4dbf54d38eea1a992b3c722a76a5d1c4cb25c
 - name: github.com/modern-go/concurrent
@@ -38,7 +57,7 @@ imports:
   subpackages:
   - atomic
 - name: golang.org/x/sys/unix
-  version: 7c87d13f8e835d2fb3a70a2912c811ed0c1d241b
+  version: c11f84a56e43e20a78cee75a7c034031ecf57d1f
 - name: gopkg.in/go-playground/validator.v8
   version: 5f1438d3fca68893a817e4a66806cea46a9e4ebf
 - name: gopkg.in/yaml.v2

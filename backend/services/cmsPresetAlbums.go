@@ -20,6 +20,31 @@ func NewCmsPresetAlbums(tk, al *xorm.Engine) *CmsPresetAlbums {
 	}
 }
 
+func (u *CmsPresetAlbums) List(appId string) (albums []models.CmsPresetAlbums, err error) {
+	albums = make([]models.CmsPresetAlbums, 0)
+	err = u.engineAL.Where("app_id = ?", appId).Find(&albums)
+	return
+}
+
+func (s *CmsPresetAlbums) Delete(appId string) (err error) {
+	session := s.engineAL.NewSession()
+	defer session.Close()
+	lists, err := s.List(appId)
+	if err != nil {
+		session.Rollback()
+		return
+	}
+	for _, one := range lists {
+		_, err = session.Id(one.GeneralWithDeleted.Id).Delete(&one)
+		if err != nil {
+			session.Rollback()
+			return
+		}
+	}
+	err = session.Commit()
+	return
+}
+
 func (u *CmsPresetAlbums) Add(autobuildId int, albumList string) (err error) {
 	sessionTK := u.engineTK.NewSession()
 	defer sessionTK.Close()
@@ -42,7 +67,7 @@ func (u *CmsPresetAlbums) Add(autobuildId int, albumList string) (err error) {
 		}
 		album := models.CmsPresetAlbums{
 			AppId:   autobuild.AppId,
-			AlbumId: uint(albumId),
+			AlbumId: albumId,
 		}
 		_, err = sessionAL.Insert(&album)
 		if err != nil {
@@ -53,8 +78,10 @@ func (u *CmsPresetAlbums) Add(autobuildId int, albumList string) (err error) {
 	}
 
 	// TODO,增量配置
-	autobuild.AlbumList = albumList
-	_, err = sessionTK.Update(&autobuild)
+	updateAutobuild := models.AutoBuild{
+		AlbumList: albumList,
+	}
+	_, err = sessionTK.Where("id = ?", autobuild.Id).Update(&updateAutobuild)
 	if err != nil {
 		sessionTK.Rollback()
 		sessionAL.Rollback()

@@ -17,15 +17,20 @@ type DBConf struct {
 	Target   string
 	MaxIdle  int
 	MaxOpen  int
-	ShowSQL  bool
+	Showsql  bool
 	Location string
 }
 
 type Conf struct {
 	App struct {
-		Mode string
+		Mode      string
+		BasicAuth string `yaml:"BasicAuth"`
 	}
 	Storybox struct {
+		Cms struct {
+			Url        string
+			Supertoken string
+		}
 		Toolkit struct {
 			Database DBConf
 		}

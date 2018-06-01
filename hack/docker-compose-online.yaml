@@ -1,0 +1,29 @@
+version: '2'
+services:
+  mysql:
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+    image: mysql:5.6.38
+    container_name: ${PROJECT_NAME}-${DEV_USER}-mysql-online
+    volumes:
+      - /home/${DEV_USER}/database/mysql:/var/lib/mysql
+    ports:
+      - "${DEV_DB_PORT}:3306"
+    networks:
+      - default
+  backend:
+    image: ${IMG_PREFIX}toolkit:${IDENTIFY_GIT_TAG}
+    container_name: ${PROJECT_NAME}-${DEV_USER}-golang-online
+    volumes:
+      # 挂载项目代码目录
+      - ../backend/config:/go/src/toolkit/config
+    links:
+      - mysql:mysql.localhost
+    ports:
+      - "${DEV_PORT}:8080"
+    networks:
+      - default
+networks:
+  default:
+    external:
+      name: ${DEV_USER}

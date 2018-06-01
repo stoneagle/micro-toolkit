@@ -12,12 +12,12 @@ services:
     networks:
       - default
   backend:
-    image: golang-bee:1.9
+    image: toolkit/golang:1.10
     container_name: ${PROJECT_NAME}-${DEV_USER}-golang
     volumes:
       # 挂载项目代码目录
-      - ../backend:/home/roobo/go_project/src/toolkit/backend
-    working_dir: /home/roobo/go_project/src/toolkit/backend
+      - ../backend:/go/src/toolkit/backend
+    working_dir: /go/src/toolkit/backend
     entrypoint: 
       - bee 
       - run 

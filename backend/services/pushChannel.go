@@ -19,6 +19,31 @@ func NewPushChannel(tk, mqtt *xorm.Engine) *PushChannel {
 	}
 }
 
+func (p *PushChannel) List(channelType string) (pushChannels []models.PushChannel, err error) {
+	pushChannels = make([]models.PushChannel, 0)
+	err = p.engineMqtt.Where("channel_type = ?", channelType).And("service = ?", "mqtt").And("production = ?", "storybox").Find(&pushChannels)
+	return
+}
+
+func (p *PushChannel) Delete(channelType string) (err error) {
+	sessionMqtt := p.engineMqtt.NewSession()
+	defer sessionMqtt.Close()
+	lists, err := p.List(channelType)
+	if err != nil {
+		sessionMqtt.Rollback()
+		return
+	}
+	for _, one := range lists {
+		_, err = sessionMqtt.Id(one.General.Id).Delete(&one)
+		if err != nil {
+			sessionMqtt.Rollback()
+			return
+		}
+	}
+	err = sessionMqtt.Commit()
+	return
+}
+
 func (p *PushChannel) Add(autobuildId int, paramsJson string) (err error) {
 	sessionTK := p.engineTK.NewSession()
 	defer sessionTK.Close()
@@ -52,6 +77,7 @@ func (p *PushChannel) Add(autobuildId int, paramsJson string) (err error) {
 		Production:  "storybox",
 		Service:     "mqtt",
 		Params:      paramsJson,
+		Status:      1,
 	}
 	_, err = sessionMqtt.Insert(&mqtt)
 	if err != nil {
@@ -61,7 +87,10 @@ func (p *PushChannel) Add(autobuildId int, paramsJson string) (err error) {
 	}
 
 	autobuild.Mqtt = 1
-	_, err = sessionTK.Update(&autobuild)
+	updateAutobuild := models.AutoBuild{
+		Mqtt: 1,
+	}
+	_, err = sessionTK.Where("id = ?", autobuild.Id).Update(&updateAutobuild)
 	if err != nil {
 		sessionTK.Rollback()
 		sessionMqtt.Rollback()
