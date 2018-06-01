@@ -4,7 +4,7 @@ PWD := $(shell pwd)
 USER := $(shell id -u)
 USERNAME := $(shell id -u -n)
 GROUP := $(shell id -g)
-PROJECT := toolkit 
+PROJECT := toolkit
 
 run-web: 
 	cd hack && docker-compose -p "$(PROJECT)-web-$(USER)" up

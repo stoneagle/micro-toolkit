@@ -7,6 +7,7 @@ import { MqttAutobuildComponent } from './mqtt/mqtt.component';
 import { UpgradeAutobuildComponent } from './upgrade/upgrade.component';
 import { CmsAutobuildComponent } from './cms/cms.component';
 import { AutobuildService  } from '../../../service/storybox/autobuild.service';
+import { MessageHandlerService  } from '../../../service/base/message-handler.service';
 
 @Component({
   selector: 'app-autobuild',
@@ -34,7 +35,8 @@ export class AutobuildComponent implements OnInit {
 	currentPage: number = 1;
 
   constructor(
-    private autobuildService: AutobuildService
+    private autobuildService: AutobuildService,
+    private messageHandlerService: MessageHandlerService 
   ) { }
 
   ngOnInit() {

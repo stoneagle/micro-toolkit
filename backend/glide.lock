@@ -1,12 +1,23 @@
-hash: 2f4e07a34d16f3ef0e10c95ff3e2d4828cc574cfa773b18c30d5e3eb20bbb655
-updated: 2018-05-30T13:54:22.943608296+08:00
+hash: e38eed76d1e8f4c0ff66ca782cfca9332845717880a30bbd1bbababc0ffc57d1
+updated: 2018-05-31T17:55:00.149962267+08:00
 imports:
+- name: github.com/boj/redistore
+  version: 4562487a4bee9a7c272b72bfaeda4917d0a47ab9
+- name: github.com/garyburd/redigo
+  version: 569eae59ada904ea8db7a225c2b47165af08735a
+  subpackages:
+  - internal
+  - redis
 - name: github.com/gin-contrib/cors
   version: cf4846e6a636a76237a28d9286f163c132e841bc
 - name: github.com/gin-contrib/sse
   version: 22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae
+- name: github.com/gin-gonic/contrib
+  version: 6ea35d32286ce194572a0dc2a3398aac0091228d
+  subpackages:
+  - sessions
 - name: github.com/gin-gonic/gin
-  version: 07cbe116a058f13026fa6b23f675155968d47cc3
+  version: caf3e350a548af1add9def68087ac53d1d000caa
   subpackages:
   - binding
   - json
@@ -23,6 +34,12 @@ imports:
   version: 3a3da3a4e26776cc22a79ef46d5d58477532dede
   subpackages:
   - proto
+- name: github.com/gorilla/context
+  version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
+- name: github.com/gorilla/securecookie
+  version: b009e17e9cb1a3b7b447cf9dc0110fcaebcc1b6b
+- name: github.com/gorilla/sessions
+  version: 9ee0d62e031e098d6353a069417bd6be8015af45
 - name: github.com/json-iterator/go
   version: 8744d7c5c7b40a53e018f78d8c508b3315260b96
 - name: github.com/mattn/go-isatty

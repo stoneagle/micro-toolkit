@@ -1,5 +1,6 @@
 app:
   mode: debug 
+  BasicAuth: "{\"admin\":\"123456\"}"
 storybox:
   cms:
     url: http://cms.roobo.net/api/app/copy

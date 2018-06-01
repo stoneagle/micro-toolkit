@@ -15,7 +15,7 @@ export class CmsAutobuildComponent implements OnInit {
   @Output() create = new EventEmitter<string>();
 
   constructor(
-    private autobuildService: AutobuildService
+    private autobuildService: AutobuildService,
   ) { }
 
   ngOnInit() {

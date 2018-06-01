@@ -1,18 +1,28 @@
 package bootstrap
 
 import (
+	"encoding/json"
 	"fmt"
+	"net/http"
 	"time"
 	"toolkit/backend/common"
 	"toolkit/backend/controllers"
 
 	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
 )
 
+var (
+	sessionKey = "user"
+)
+
 func Boot(app *gin.Engine) {
+	store := sessions.NewCookieStore([]byte("secret"))
+	app.Use(sessions.Sessions("session", store))
+
 	conf := common.GetConfig()
 	setProjectEngine(conf.Storybox.Toolkit.Database)
 	setProjectEngine(conf.Storybox.Mqtt.Database)
@@ -22,7 +32,7 @@ func Boot(app *gin.Engine) {
 
 	if conf.App.Mode == "debug" {
 		app.Use(cors.New(cors.Config{
-			AllowHeaders:     []string{"Content-Type", "Access-Control-Allow-Origin"},
+			AllowHeaders:     []string{"Content-Type", "Access-Control-Allow-Origin", "Authorization"},
 			AllowMethods:     []string{"GET", "POST", "DELETE", "PUT", "PATCH"},
 			AllowCredentials: true,
 			AllowOrigins:     []string{"http://localhost:8080"},
@@ -34,9 +44,55 @@ func Boot(app *gin.Engine) {
 		}))
 	}
 
-	toolkit := app.Group("/toolkit")
+	BAConf := map[string]string{}
+	err := json.Unmarshal([]byte(conf.App.BasicAuth), &BAConf)
+	if err != nil {
+		panic(err)
+	}
+
+	app.GET("/toolkit/login", gin.BasicAuth(BAConf), func(c *gin.Context) {
+		user := c.MustGet(gin.AuthUserKey).(string)
+		session := sessions.Default(c)
+		session.Set(sessionKey, user)
+		err := session.Save()
+		if err != nil {
+			common.ResponseErrorBusiness(c, common.ErrorLogin, "session save error", err)
+		} else {
+			common.ResponseSuccess(c, struct{}{})
+		}
+	})
+
+	app.GET("/toolkit/logout", func(c *gin.Context) {
+		session := sessions.Default(c)
+		user := session.Get(sessionKey)
+		if user == nil {
+			common.ResponseErrorBusiness(c, common.ErrorLogin, "invalid session token", nil)
+		} else {
+			session.Delete(sessionKey)
+			session.Save()
+			common.ResponseSuccess(c, struct{}{})
+		}
+	})
+
+	toolkit := app.Group("/toolkit", AuthRequired())
 	{
 		controllers.NewAutoBuild(common.GetEngine(conf.Storybox.Toolkit.Database.Name)).Router(toolkit)
+	}
+}
+
+func AuthRequired() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		session := sessions.Default(c)
+		user := session.Get("user")
+		if user == nil {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"code": common.ErrorLogin,
+				"data": struct{}{},
+				"desc": "invalid session token",
+			})
+		} else {
+			c.Next()
+		}
 	}
 }
 

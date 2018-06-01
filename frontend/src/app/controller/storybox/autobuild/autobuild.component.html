@@ -48,7 +48,7 @@
         <clr-dg-cell>{{build.CreatedAt | date: 'short'}}</clr-dg-cell>
         <clr-dg-cell>{{build.UpdatedAt | date: 'short'}}</clr-dg-cell>
         <clr-dg-cell>
-          <button *ngIf="(build.Callback == '') && (build.Mqtt == 0) && (build.UpgradeName == '') && (build.AlbumList == '')" (click)="delete(build)" type="button" class="btn btn-sm btn-icon btn-danger">
+          <button *ngIf="(build.CmsSourceApp == '') && (build.Callback == '') && (build.Mqtt == 0) && (build.UpgradeName == '') && (build.AlbumList == '')" (click)="delete(build)" type="button" class="btn btn-sm btn-icon btn-danger">
 						<clr-icon shape="error-standard"></clr-icon>
 					</button>
         </clr-dg-cell>
@@ -65,5 +65,7 @@
 <cms-autobuild (create)="createFinished($event)"></cms-autobuild>
 <mqtt-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></mqtt-autobuild>
 <callback-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></callback-autobuild>
-<upgrade-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"><upgrade-autobuild>
 <album-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></album-autobuild>
+<upgrade-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></upgrade-autobuild>
+
+

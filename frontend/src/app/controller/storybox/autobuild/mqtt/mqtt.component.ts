@@ -18,7 +18,7 @@ export class MqttAutobuildComponent implements OnInit {
   @Output() roll = new EventEmitter<string>();
 
   constructor(
-    private autobuildService: AutobuildService
+    private autobuildService: AutobuildService,
   ) { }
 
   ngOnInit() {

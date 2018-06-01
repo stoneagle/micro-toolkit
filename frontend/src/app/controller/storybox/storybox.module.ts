@@ -1,13 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { AutobuildComponent } from './autobuild.component';
-import { AddAutobuildComponent } from './add/add.component';
-import { AlbumAutobuildComponent } from './album/album.component';
-import { CallbackAutobuildComponent } from './callback/callback.component';
-import { MqttAutobuildComponent } from './mqtt/mqtt.component';
-import { UpgradeAutobuildComponent } from './upgrade/upgrade.component';
-import { CmsAutobuildComponent } from './cms/cms.component';
-import { AutobuildService  } from '../../../service/storybox/autobuild.service';
+import { AutobuildComponent } from './autobuild/autobuild.component';
+import { AddAutobuildComponent } from './autobuild/add/add.component';
+import { AlbumAutobuildComponent } from './autobuild/album/album.component';
+import { CallbackAutobuildComponent } from './autobuild/callback/callback.component';
+import { MqttAutobuildComponent } from './autobuild/mqtt/mqtt.component';
+import { UpgradeAutobuildComponent } from './autobuild/upgrade/upgrade.component';
+import { CmsAutobuildComponent } from './autobuild/cms/cms.component';
+import { AutobuildService  } from '../../service/storybox/autobuild.service';
+import { MessageHandlerService  } from '../../service/base/message-handler.service';
 
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule  } from '@angular/platform-browser/animations';
@@ -36,10 +37,11 @@ import { FormsModule }   from '@angular/forms';
   ],
   providers: [
     AutobuildService,
+    MessageHandlerService
   ],
   exports: [
     AutobuildComponent,
   ]
 })
-export class AutobuildModule { 
+export class StoryboxModule { 
 }

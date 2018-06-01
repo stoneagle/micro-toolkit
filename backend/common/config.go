@@ -23,7 +23,8 @@ type DBConf struct {
 
 type Conf struct {
 	App struct {
-		Mode string
+		Mode      string
+		BasicAuth string `yaml:"BasicAuth"`
 	}
 	Storybox struct {
 		Cms struct {

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Autobuild } from '../../../../model/storybox/autobuild';
 import { Album } from '../../../../model/storybox/album';
 import { AutobuildService  } from '../../../../service/storybox/autobuild.service';
@@ -18,7 +18,7 @@ export class AlbumAutobuildComponent implements OnInit {
   @Output() roll = new EventEmitter<string>();
 
   constructor(
-    private autobuildService: AutobuildService
+    private autobuildService: AutobuildService,
   ) { }
 
   ngOnInit() {

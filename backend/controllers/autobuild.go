@@ -51,7 +51,7 @@ func (c *AutoBuild) Router(router *gin.RouterGroup) {
 	autobuilds.POST("/:id/callback", c.Callback)
 	autobuilds.POST("/:id/upgrade", c.Upgrade)
 	autobuilds.POST("/:id/album", c.Album)
-	autobuilds.DELETE("/:id", c.Delete)
+	autobuilds.DELETE("/:id", InitAutobuild(), c.Delete)
 	autobuilds.DELETE("/:id/mqtt", InitAutobuild(), c.MqttDelete)
 	autobuilds.DELETE("/:id/callback", InitAutobuild(), c.CallbackDelete)
 	autobuilds.DELETE("/:id/upgrade", InitAutobuild(), c.UpgradeDelete)

@@ -14,7 +14,7 @@ export class AddAutobuildComponent implements OnInit {
   @Output() create = new EventEmitter<boolean>();
 
   constructor(
-    private autobuildService: AutobuildService
+    private autobuildService: AutobuildService,
   ) { }
 
   ngOnInit() {
