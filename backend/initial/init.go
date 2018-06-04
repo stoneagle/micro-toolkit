@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	yamlFile, err := ioutil.ReadFile("./config/config.yaml")
+	yamlFile, err := ioutil.ReadFile("../config/config.yaml")
 	if err != nil {
 		panic(err)
 	}

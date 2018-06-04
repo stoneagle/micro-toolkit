@@ -63,7 +63,7 @@ tool-build:
 		-v $(PWD)/backend:/go/src/toolkit/backend \
 		-w /go/src/toolkit/backend/initial \
 		golang:$(GOVERSION) \
-		go build -o /tmp/release/tool
+		go build -o /tmp/release/tool --deploy-url static
 
 ng-build: 
 	docker run -it --rm \
