@@ -57,23 +57,28 @@ export class AutobuildComponent implements OnInit {
   }
 
   openAlbumModel(ab: Autobuild): void {
-    this.albumAutobuild.newAlbum(ab);
+    let autobuild = Object.assign({}, ab);
+    this.albumAutobuild.newAlbum(autobuild);
   }
 
   openCallbackModel(ab: Autobuild): void {
-    this.callbackAutobuild.newCallback(ab);
+    let autobuild = Object.assign({}, ab);
+    this.callbackAutobuild.newCallback(autobuild);
   }
 
   openMqttModel(ab: Autobuild): void {
-    this.mqttAutobuild.newMqtt(ab);
+    let autobuild = Object.assign({}, ab);
+    this.mqttAutobuild.newMqtt(autobuild);
   }
 
   openCmsModel(ab: Autobuild): void {
-    this.cmsAutobuild.newCms(ab);
+    let autobuild = Object.assign({}, ab);
+    this.cmsAutobuild.newCms(autobuild);
   }
 
   openUpgradeModel(ab: Autobuild): void {
-    this.upgradeAutobuild.newUpgrade(ab);
+    let autobuild = Object.assign({}, ab);
+    this.upgradeAutobuild.newUpgrade(autobuild);
   }
 
   openAddModel(): void {
