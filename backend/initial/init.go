@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	yamlFile, err := ioutil.ReadFile("../config/config.yaml")
+	yamlFile, err := ioutil.ReadFile("./config/config.yaml")
 	if err != nil {
 		panic(err)
 	}
@@ -41,7 +41,7 @@ func initToolkit(dbConfig common.DBConf, mode string) {
 	engine.TZLocation = location
 	engine.StoreEngine("InnoDB")
 	engine.Charset("utf8")
-	if mode == "debug" {
+	if mode == "dev" {
 		err = engine.DropTables(new(cm.AutoBuild), new(cm.CallbackConfig), new(cm.CmsPresetAlbums), new(cm.PushChannel), new(cm.UpUpdate))
 		if err != nil {
 			panic(err)
@@ -51,10 +51,6 @@ func initToolkit(dbConfig common.DBConf, mode string) {
 			panic(err)
 		}
 	} else {
-		err = engine.DropTables(new(cm.AutoBuild))
-		if err != nil {
-			panic(err)
-		}
 		err = engine.Sync2(new(cm.AutoBuild))
 		if err != nil {
 			panic(err)
