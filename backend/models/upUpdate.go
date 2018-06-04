@@ -8,7 +8,7 @@ type UpUpdate struct {
 	Name               string `xorm:"varchar(100) notnull"`
 	Vcode              int    `xorm:"notnull default(0)"`
 	Vname              string `xorm:"varchar(40) notnull"`
-	OSvcode            int    `xorm:"notnull default(0)"`
+	Osvcode            int    `xorm:"notnull default(0)"`
 	Operation          string `xorm:"varchar(1024) notnull default('')"`
 	ExecuteTime        int    `xorm:"char(50) notnull default('now')"`
 	Minvcode           int    `xorm:"notnull default(0)"`
