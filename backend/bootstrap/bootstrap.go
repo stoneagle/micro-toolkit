@@ -57,33 +57,36 @@ func Boot(app *gin.Engine) {
 		panic(err)
 	}
 
-	app.GET("/toolkit/login", gin.BasicAuth(BAConf), func(c *gin.Context) {
-		user := c.MustGet(gin.AuthUserKey).(string)
-		session := sessions.Default(c)
-		session.Set(sessionKey, user)
-		err := session.Save()
-		if err != nil {
-			common.ResponseErrorBusiness(c, common.ErrorLogin, "session save error", err)
-		} else {
-			common.ResponseSuccess(c, struct{}{})
-		}
-	})
-
-	app.GET("/toolkit/logout", func(c *gin.Context) {
-		session := sessions.Default(c)
-		user := session.Get(sessionKey)
-		if user == nil {
-			common.ResponseErrorBusiness(c, common.ErrorLogin, "invalid session token", nil)
-		} else {
-			session.Delete(sessionKey)
-			session.Save()
-			common.ResponseSuccess(c, struct{}{})
-		}
-	})
-
-	toolkit := app.Group("/toolkit", AuthRequired())
+	v1 := app.Group("/v1")
 	{
-		controllers.NewAutoBuild(common.GetEngine(conf.Storybox.Toolkit.Database.Name)).Router(toolkit)
+		v1.GET("/login", gin.BasicAuth(BAConf), func(c *gin.Context) {
+			user := c.MustGet(gin.AuthUserKey).(string)
+			session := sessions.Default(c)
+			session.Set(sessionKey, user)
+			err := session.Save()
+			if err != nil {
+				common.ResponseErrorBusiness(c, common.ErrorLogin, "session save error", err)
+			} else {
+				common.ResponseSuccess(c, struct{}{})
+			}
+		})
+
+		v1.GET("/logout", func(c *gin.Context) {
+			session := sessions.Default(c)
+			user := session.Get(sessionKey)
+			if user == nil {
+				common.ResponseErrorBusiness(c, common.ErrorLogin, "invalid session token", nil)
+			} else {
+				session.Delete(sessionKey)
+				session.Save()
+				common.ResponseSuccess(c, struct{}{})
+			}
+		})
+
+		toolkit := v1.Group("/toolkit", AuthRequired())
+		{
+			controllers.NewAutoBuild(common.GetEngine(conf.Storybox.Toolkit.Database.Name)).Router(toolkit)
+		}
 	}
 }
 
