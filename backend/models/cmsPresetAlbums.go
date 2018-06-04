@@ -2,7 +2,7 @@ package models
 
 type CmsPresetAlbums struct {
 	GeneralWithDeleted `xorm:"extends"`
-	AppId              string `xorm:"varchar(255) notnull default('')"`
+	AppId              string `xorm:"varchar(255) notnull default('') 'appId'"`
 	AlbumId            int    `xorm:"BIGINT(20) notnull default(0)"`
 }
 
