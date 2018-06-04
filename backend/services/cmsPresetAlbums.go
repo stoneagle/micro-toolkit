@@ -52,7 +52,7 @@ func (u *CmsPresetAlbums) Add(autobuildId int, albumList string) (err error) {
 	defer sessionAL.Close()
 
 	autobuild := models.AutoBuild{}
-	_, err = sessionAL.Where("id = ?", autobuildId).Get(&autobuild)
+	_, err = sessionTK.Where("id = ?", autobuildId).Get(&autobuild)
 	if err != nil {
 		sessionTK.Rollback()
 		sessionAL.Rollback()
