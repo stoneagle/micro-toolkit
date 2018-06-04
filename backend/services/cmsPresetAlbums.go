@@ -22,7 +22,7 @@ func NewCmsPresetAlbums(tk, al *xorm.Engine) *CmsPresetAlbums {
 
 func (u *CmsPresetAlbums) List(appId string) (albums []models.CmsPresetAlbums, err error) {
 	albums = make([]models.CmsPresetAlbums, 0)
-	err = u.engineAL.Where("app_id = ?", appId).Find(&albums)
+	err = u.engineAL.Where("appId = ?", appId).Find(&albums)
 	return
 }
 
