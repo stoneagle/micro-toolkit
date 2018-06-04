@@ -33,7 +33,7 @@ func (s *UpUpdate) Delete(name string, vcode int) (err error) {
 		return
 	}
 	for _, one := range lists {
-		_, err = session.Id(one.GeneralWithDeleted.Id).Delete(&one)
+		_, err = session.Id(one.General.Id).Delete(&one)
 		if err != nil {
 			session.Rollback()
 			return

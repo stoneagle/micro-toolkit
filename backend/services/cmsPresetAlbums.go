@@ -22,7 +22,7 @@ func NewCmsPresetAlbums(tk, al *xorm.Engine) *CmsPresetAlbums {
 
 func (u *CmsPresetAlbums) List(appId string) (albums []models.CmsPresetAlbums, err error) {
 	albums = make([]models.CmsPresetAlbums, 0)
-	err = u.engineAL.Where("app_id = ?", appId).Find(&albums)
+	err = u.engineAL.Unscoped().Where("appId = ?", appId).And("deleted_at = ?", 0).Find(&albums)
 	return
 }
 
@@ -35,7 +35,7 @@ func (s *CmsPresetAlbums) Delete(appId string) (err error) {
 		return
 	}
 	for _, one := range lists {
-		_, err = session.Id(one.GeneralWithDeleted.Id).Delete(&one)
+		_, err = session.Unscoped().Id(one.General.Id).Delete(&one)
 		if err != nil {
 			session.Rollback()
 			return
