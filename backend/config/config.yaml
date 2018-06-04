@@ -1,6 +1,6 @@
 app:
   mode: dev
-  BasicAuth: "{\"admin\":\"123456\"}"
+  BasicAuth: '{"admin":"123456"}'
 storybox:
   cms:
     url: http://cms.roobo.net/api/app/copy
@@ -31,7 +31,7 @@ storybox:
       maxOpen: 5 
       showsql: True
       location: Asia/Shanghai
-    params: "{\"host\":\"mqtt.roobo.net\",\"port\":1883,\"qos\":0,\"token\":\"3057fcaa6a621db5640867e99907370f\"}"
+    params: '{"host":"mqtt.roobo.net","port":1883,"qos":0,"token":"3057fcaa6a621db5640867e99907370f"}'
   callback:
     database:
       name: callback 
@@ -45,7 +45,7 @@ storybox:
       maxOpen: 5 
       showsql: True
       location: Asia/Shanghai
-    config: "{\"tongmi\":[{\"url\":\"xxx\",\"state\":\"aaa\",\"action\":\"yyy\"}],\"rtoy\":[{\"url\":\"xxx\",\"state\":\"aaa\",\"action\":\"yyy\"},{\"url\":\"111\",\"state\":\"222\",\"action\":\"333\"}]}"
+    config: '{"tongmi":[{"url":"xxx","state":"aaa","action":"yyy"}],"rtoy":[{"url":"xxx","state":"aaa","action":"yyy"},{"url":"111","state":"222","action":"333"}]}'
   upgrade:
     database:
       name: upgrade 
