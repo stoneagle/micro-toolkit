@@ -17,6 +17,7 @@ services:
     volumes:
       # 挂载项目代码目录
       - ../backend/config:/go/src/toolkit/config
+      - ../backend/static/assets:/go/src/toolkit/static/assets
     links:
       - mysql:mysql.localhost
     ports:

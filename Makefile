@@ -6,7 +6,7 @@ USERNAME := $(shell id -u -n)
 GROUP := $(shell id -g)
 PROJECT := toolkit
 IDENTIFY_GIT_TAG := $(shell git describe --tags `git rev-list --tags --max-count=1`) 
-DEVELOP_PREFIX = 
+DEVELOP_PREFIX =
 GOVERSION = 1.10
 
 run-web: 
@@ -63,7 +63,7 @@ tool-build:
 		-v $(PWD)/backend:/go/src/toolkit/backend \
 		-w /go/src/toolkit/backend/initial \
 		golang:$(GOVERSION) \
-		go build -o /tmp/release/tool --deploy-url static
+		go build -o /tmp/release/tool
 
 ng-build: 
 	docker run -it --rm \
@@ -71,4 +71,4 @@ ng-build:
 		-v $(PWD):/app \
 		-w /app/frontend \
 		alexsuch/angular-cli:v1.1.3 \
-		ng build --environment=prod
+		ng build --environment=prod --deploy-url static
