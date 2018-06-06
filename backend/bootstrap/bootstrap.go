@@ -59,7 +59,7 @@ func Boot(app *gin.Engine) {
 
 	v1 := app.Group("/v1")
 	{
-		v1.GET("/login", gin.BasicAuth(BAConf), func(c *gin.Context) {
+		v1.GET("/toolkit/login", gin.BasicAuth(BAConf), func(c *gin.Context) {
 			user := c.MustGet(gin.AuthUserKey).(string)
 			session := sessions.Default(c)
 			session.Set(sessionKey, user)
@@ -71,7 +71,7 @@ func Boot(app *gin.Engine) {
 			}
 		})
 
-		v1.GET("/logout", func(c *gin.Context) {
+		v1.GET("/toolkit/logout", func(c *gin.Context) {
 			session := sessions.Default(c)
 			user := session.Get(sessionKey)
 			if user == nil {
