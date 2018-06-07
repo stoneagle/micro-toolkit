@@ -32,6 +32,7 @@ storybox:
       showsql: True
       location: Asia/Shanghai
     params: '{"host":"mqtt.roobo.net","port":1883,"qos":0,"token":"3057fcaa6a621db5640867e99907370f"}'
+    lastfix: '.xxx.yyy'
   callback:
     database:
       name: callback 

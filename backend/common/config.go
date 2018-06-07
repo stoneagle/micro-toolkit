@@ -37,6 +37,7 @@ type Conf struct {
 		Mqtt struct {
 			Database DBConf
 			Params   string
+			Lastfix  string
 		}
 		Callback struct {
 			Database DBConf
