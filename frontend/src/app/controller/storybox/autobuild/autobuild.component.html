@@ -45,8 +45,8 @@
             {{(build.AlbumList === '' ? '-' : build.AlbumList)}}
           </a>
         </clr-dg-cell>
-        <clr-dg-cell>{{build.CreatedAt | date: 'short'}}</clr-dg-cell>
-        <clr-dg-cell>{{build.UpdatedAt | date: 'short'}}</clr-dg-cell>
+        <clr-dg-cell>{{build.CreatedAt * 1000 | date: 'yy-MM-dd HH:mm:ss'}}</clr-dg-cell>
+        <clr-dg-cell>{{build.UpdatedAt * 1000 | date: 'yy-MM-dd HH:mm:ss'}}</clr-dg-cell>
         <clr-dg-cell>
           <button *ngIf="(build.CmsSourceApp == '') && (build.Callback == '') && (build.Mqtt == 0) && (build.UpgradeName == '') && (build.AlbumList == '')" (click)="delete(build)" type="button" class="btn btn-sm btn-icon btn-danger">
 						<clr-icon shape="error-standard"></clr-icon>

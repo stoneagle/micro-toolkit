@@ -26,8 +26,8 @@
               <clr-dg-cell>{{one.Id}}</clr-dg-cell>
               <clr-dg-cell>{{one.AppId}}</clr-dg-cell>
               <clr-dg-cell>{{one.AlbumId}}</clr-dg-cell>
-              <clr-dg-cell>{{one.CreatedAt}}</clr-dg-cell>
-              <clr-dg-cell>{{one.UPdatedAt}}</clr-dg-cell>
+              <clr-dg-cell>{{one.CreatedAt * 1000 | date: 'yy-MM-dd HH:mm:ss'}}</clr-dg-cell>
+              <clr-dg-cell>{{one.UpdatedAt * 1000 | date: 'yy-MM-dd HH:mm:ss'}}</clr-dg-cell>
           </clr-dg-row>
       </clr-datagrid>
       <div>

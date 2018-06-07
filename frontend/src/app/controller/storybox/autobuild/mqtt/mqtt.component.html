@@ -38,8 +38,8 @@
               <clr-dg-cell>{{one.Production}}</clr-dg-cell>
               <clr-dg-cell>{{one.Service}}</clr-dg-cell>
               <clr-dg-cell>{{one.Params}}</clr-dg-cell>
-              <clr-dg-cell>{{one.CreatedAt}}</clr-dg-cell>
-              <clr-dg-cell>{{one.UPdatedAt}}</clr-dg-cell>
+              <clr-dg-cell>{{one.CreatedAt * 1000 | date: 'yy-MM-dd HH:mm:ss'}}</clr-dg-cell>
+              <clr-dg-cell>{{one.UpdatedAt * 1000 | date: 'yy-MM-dd HH:mm:ss'}}</clr-dg-cell>
           </clr-dg-row>
       </clr-datagrid>
       <div>
