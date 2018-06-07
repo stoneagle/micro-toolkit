@@ -57,6 +57,10 @@ func Boot(app *gin.Engine) {
 		panic(err)
 	}
 
+	app.NoRoute(func(c *gin.Context) {
+		c.Redirect(http.StatusMovedPermanently, "")
+	})
+
 	v1 := app.Group("/v1")
 	{
 		v1.GET("/toolkit/login", gin.BasicAuth(BAConf), func(c *gin.Context) {
