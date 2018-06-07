@@ -31,7 +31,7 @@ func NewAutoBuild(engine *xorm.Engine) *AutoBuild {
 	engineAL := common.GetEngine(autobuild.Config.Storybox.Album.Database.Name)
 
 	autobuild.AutoBuildSvc = services.NewAutoBuild(engineTK)
-	autobuild.MqttSvc = services.NewPushChannel(engineTK, engineMqtt)
+	autobuild.MqttSvc = services.NewPushChannel(engineTK, engineMqtt, autobuild.Config.Storybox.Mqtt.Lastfix)
 	autobuild.CallbackSvc = services.NewCallbackConfig(engineTK, engineCB)
 	autobuild.UpgradeSvc = services.NewUpUpdate(engineTK, engineUP)
 	autobuild.AlbumSvc = services.NewCmsPresetAlbums(engineTK, engineAL)
@@ -229,6 +229,11 @@ func (c *AutoBuild) Upgrade(ctx *gin.Context) {
 
 	if autobuild.Id == 0 || autobuild.UpgradeName == "" || autobuild.UpgradeVcode == 0 {
 		common.ResponseErrorBusiness(ctx, common.ErrorParams, "id, name or vcode params can not be empty", nil)
+		return
+	}
+
+	if autobuild.UpgradeVcode <= 0 {
+		common.ResponseErrorBusiness(ctx, common.ErrorParams, "vcode must bigger than zero", nil)
 		return
 	}
 

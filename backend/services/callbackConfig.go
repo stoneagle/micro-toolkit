@@ -1,6 +1,7 @@
 package services
 
 import (
+	"time"
 	"toolkit/backend/models"
 
 	"github.com/go-xorm/xorm"
@@ -60,10 +61,13 @@ func (u *CallbackConfig) Add(autobuildId int, templateSlice []models.CallbackTem
 	for _, template := range templateSlice {
 		callback := models.CallbackConfig{
 			AppId:         autobuild.AppId,
+			State:         1,
 			CallbackState: template.State,
 			CallbackUrl:   template.Url,
 			Action:        template.Action,
 		}
+		callback.General.UpdatedAt = int(time.Now().Unix())
+		callback.General.CreatedAt = int(time.Now().Unix())
 		_, err = sessionCB.Insert(&callback)
 		if err != nil {
 			sessionTK.Rollback()

@@ -3,6 +3,7 @@ package services
 import (
 	"strconv"
 	"strings"
+	"time"
 	"toolkit/backend/models"
 
 	"github.com/go-xorm/xorm"
@@ -69,6 +70,8 @@ func (u *CmsPresetAlbums) Add(autobuildId int, albumList string) (err error) {
 			AppId:   autobuild.AppId,
 			AlbumId: albumId,
 		}
+		album.General.UpdatedAt = int(time.Now().Unix())
+		album.General.CreatedAt = int(time.Now().Unix())
 		_, err = sessionAL.Insert(&album)
 		if err != nil {
 			sessionTK.Rollback()
