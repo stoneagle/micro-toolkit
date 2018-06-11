@@ -126,6 +126,11 @@ func (c *AutoBuild) Cms(ctx *gin.Context) {
 		return
 	}
 
+	if autobuild.CmsSourceApp == autobuild.AppId {
+		common.ResponseErrorBusiness(ctx, common.ErrorParams, "sourceApp can not equal to the targetApp", nil)
+		return
+	}
+
 	url := c.Config.Storybox.Cms.Url
 	params := map[string]string{
 		"srcAppId": autobuild.CmsSourceApp,
