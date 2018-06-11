@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"strconv"
 	"strings"
 	"time"
@@ -65,6 +66,9 @@ func (u *CmsPresetAlbums) Add(autobuildId int, albumList string) (err error) {
 		albumId, err := strconv.Atoi(albumIdStr)
 		if err != nil {
 			return err
+		}
+		if albumId <= 0 {
+			return errors.New("albumId must bigger than 0:" + albumIdStr)
 		}
 		album := models.CmsPresetAlbums{
 			AppId:   autobuild.AppId,
