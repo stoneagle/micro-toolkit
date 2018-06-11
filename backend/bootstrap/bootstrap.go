@@ -42,10 +42,10 @@ func Boot(app *gin.Engine) {
 			AllowHeaders:     []string{"Content-Type", "Access-Control-Allow-Origin", "Authorization"},
 			AllowMethods:     []string{"GET", "POST", "DELETE", "PUT", "PATCH"},
 			AllowCredentials: true,
-			AllowOrigins:     []string{"http://localhost:8080", "http://localhost:6999"},
+			AllowOrigins:     []string{"http://localhost:8280", "http://localhost:8281"},
 			ExposeHeaders:    []string{"Content-Length"},
 			AllowOriginFunc: func(origin string) bool {
-				return origin == "https://localhost:6999"
+				return origin == "https://localhost:8280"
 			},
 			MaxAge: 12 * time.Hour,
 		}))
