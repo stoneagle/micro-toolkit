@@ -49,9 +49,17 @@ func (p *PushChannel) Delete(channelType string) (err error) {
 
 func (p *PushChannel) Add(autobuildId int, paramsJson string) (err error) {
 	sessionTK := p.engineTK.NewSession()
-	defer sessionTK.Close()
 	sessionMqtt := p.engineMqtt.NewSession()
+	defer sessionTK.Close()
 	defer sessionMqtt.Close()
+	err = sessionTK.Begin()
+	if err != nil {
+		return
+	}
+	err = sessionMqtt.Begin()
+	if err != nil {
+		return
+	}
 
 	autobuild := models.AutoBuild{}
 	_, err = sessionTK.Where("id = ?", autobuildId).Get(&autobuild)

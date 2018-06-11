@@ -49,9 +49,17 @@ func (s *CmsPresetAlbums) Delete(appId string) (err error) {
 
 func (u *CmsPresetAlbums) Add(autobuildId int, albumList string) (err error) {
 	sessionTK := u.engineTK.NewSession()
-	defer sessionTK.Close()
 	sessionAL := u.engineAL.NewSession()
+	defer sessionTK.Close()
 	defer sessionAL.Close()
+	err = sessionTK.Begin()
+	if err != nil {
+		return
+	}
+	err = sessionAL.Begin()
+	if err != nil {
+		return
+	}
 
 	autobuild := models.AutoBuild{}
 	_, err = sessionTK.Where("id = ?", autobuildId).Get(&autobuild)
@@ -65,6 +73,8 @@ func (u *CmsPresetAlbums) Add(autobuildId int, albumList string) (err error) {
 	for _, albumIdStr := range albumStrSlice {
 		albumId, err := strconv.Atoi(albumIdStr)
 		if err != nil {
+			sessionTK.Rollback()
+			sessionAL.Rollback()
 			return err
 		}
 		if albumId <= 0 {

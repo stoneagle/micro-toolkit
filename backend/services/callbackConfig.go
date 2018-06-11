@@ -46,9 +46,17 @@ func (s *CallbackConfig) Delete(appId string) (err error) {
 
 func (u *CallbackConfig) Add(autobuildId int, templateSlice []models.CallbackTemplate, ctype string) (err error) {
 	sessionTK := u.engineTK.NewSession()
-	defer sessionTK.Close()
 	sessionCB := u.engineCB.NewSession()
+	defer sessionTK.Close()
 	defer sessionCB.Close()
+	err = sessionTK.Begin()
+	if err != nil {
+		return
+	}
+	err = sessionCB.Begin()
+	if err != nil {
+		return
+	}
 
 	autobuild := models.AutoBuild{}
 	_, err = sessionTK.Where("id = ?", autobuildId).Get(&autobuild)

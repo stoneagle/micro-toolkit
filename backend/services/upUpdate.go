@@ -46,9 +46,17 @@ func (s *UpUpdate) Delete(name string, vcode int) (err error) {
 
 func (u *UpUpdate) Add(autobuildId, vcode int, name, vname string) (err error) {
 	sessionTK := u.engineTK.NewSession()
-	defer sessionTK.Close()
 	sessionUP := u.engineUP.NewSession()
+	defer sessionTK.Close()
 	defer sessionUP.Close()
+	err = sessionTK.Begin()
+	if err != nil {
+		return
+	}
+	err = sessionUP.Begin()
+	if err != nil {
+		return
+	}
 
 	autobuild := models.AutoBuild{}
 	_, err = sessionTK.Where("id = ?", autobuildId).Get(&autobuild)
