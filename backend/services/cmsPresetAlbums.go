@@ -68,6 +68,8 @@ func (u *CmsPresetAlbums) Add(autobuildId int, albumList string) (err error) {
 			return err
 		}
 		if albumId <= 0 {
+			sessionTK.Rollback()
+			sessionAL.Rollback()
 			return errors.New("albumId must bigger than 0:" + albumIdStr)
 		}
 		album := models.CmsPresetAlbums{
