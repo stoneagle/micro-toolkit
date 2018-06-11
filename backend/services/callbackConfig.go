@@ -62,7 +62,7 @@ func (u *CallbackConfig) Add(autobuildId int, templateSlice []models.CallbackTem
 		callback := models.CallbackConfig{
 			AppId:         autobuild.AppId,
 			State:         1,
-			CallbackState: template.State,
+			CallbackState: template.CallbackState,
 			CallbackUrl:   template.Url,
 			Action:        template.Action,
 		}
