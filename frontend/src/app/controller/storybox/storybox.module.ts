@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { AutobuildComponent } from './autobuild/autobuild.component';
 import { AddAutobuildComponent } from './autobuild/add/add.component';
 import { AlbumAutobuildComponent } from './autobuild/album/album.component';

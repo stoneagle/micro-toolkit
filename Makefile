@@ -1,5 +1,3 @@
-.PHONY: run-web, stop-web rm-web
-
 PWD := $(shell pwd)
 USER := $(shell id -u)
 USERNAME := $(shell id -u -n)
@@ -7,6 +5,7 @@ GROUP := $(shell id -g)
 PROJECT := toolkit
 IDENTIFY_GIT_TAG := $(shell git describe --tags `git rev-list --tags --max-count=1`) 
 DEVELOP_PREFIX =
+RELEASE_PREFIX =
 GOVERSION = 1.10
 
 run-web: 
@@ -35,17 +34,21 @@ rm-web-ol:
 build-golang:
 	cd hack && docker build -f ./Dockerfile -t toolkit/golang:1.10 .
 
-release-backend: clean-files stop-web rm-web stop-web-ol rm-web-ol ng-build backend-build tool-build build-service
+build: clean-files stop-web rm-web stop-web-ol rm-web-ol ng-build backend-build tool-build build-service
+
+build-service:
+	docker build -f ./hack/release/Dockerfile -t $(DEVELOP_PREFIX)toolkit:$(IDENTIFY_GIT_TAG) .
+
+push-service:
+	docker push $(DEVELOP_PREFIX)toolkit:$(IDENTIFY_GIT_TAG)
 
 clean-files:
 	rm -rf ./backend/static/* && \
 	rm -rf ./backend/release/* 
 
-push-service:
-	docker push $(DEVELOP_PREFIX)toolkit:$(IDENTIFY_GIT_TAG)
-
-build-service:
-	docker build -f ./hack/release/Dockerfile -t $(DEVELOP_PREFIX)toolkit:$(IDENTIFY_GIT_TAG) .
+push-release:
+	docker tag $(DEVELOP_PREFIX)toolkit:$(IDENTIFY_GIT_TAG) $(DEVELOP_PREFIX)toolkit:$(IDENTIFY_GIT_TAG) && \
+	docker push $(RELEASE_PREFIX)toolkit:$(IDENTIFY_GIT_TAG)
 
 backend-build:
 	docker run -it --rm \

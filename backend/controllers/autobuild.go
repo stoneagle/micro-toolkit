@@ -31,7 +31,7 @@ func NewAutoBuild(engine *xorm.Engine) *AutoBuild {
 	engineAL := common.GetEngine(autobuild.Config.Storybox.Album.Database.Name)
 
 	autobuild.AutoBuildSvc = services.NewAutoBuild(engineTK)
-	autobuild.MqttSvc = services.NewPushChannel(engineTK, engineMqtt)
+	autobuild.MqttSvc = services.NewPushChannel(engineTK, engineMqtt, autobuild.Config.Storybox.Mqtt.Lastfix)
 	autobuild.CallbackSvc = services.NewCallbackConfig(engineTK, engineCB)
 	autobuild.UpgradeSvc = services.NewUpUpdate(engineTK, engineUP)
 	autobuild.AlbumSvc = services.NewCmsPresetAlbums(engineTK, engineAL)
@@ -47,7 +47,7 @@ func (c *AutoBuild) Router(router *gin.RouterGroup) {
 	autobuilds.GET("/:id/album", InitAutobuild(), c.AlbumList)
 	autobuilds.POST("", c.Create)
 	autobuilds.POST("/:id/cms", c.Cms)
-	autobuilds.POST("/:id/mqtt", c.Mqtt)
+	autobuilds.POST("/:id/mqtt", InitAutobuild(), c.Mqtt)
 	autobuilds.POST("/:id/callback", c.Callback)
 	autobuilds.POST("/:id/upgrade", c.Upgrade)
 	autobuilds.POST("/:id/album", c.Album)
@@ -126,6 +126,11 @@ func (c *AutoBuild) Cms(ctx *gin.Context) {
 		return
 	}
 
+	if autobuild.CmsSourceApp == autobuild.AppId {
+		common.ResponseErrorBusiness(ctx, common.ErrorParams, "sourceApp can not equal to the targetApp", nil)
+		return
+	}
+
 	url := c.Config.Storybox.Cms.Url
 	params := map[string]string{
 		"srcAppId": autobuild.CmsSourceApp,
@@ -170,19 +175,20 @@ func (c *AutoBuild) Cms(ctx *gin.Context) {
 }
 
 func (c *AutoBuild) Mqtt(ctx *gin.Context) {
-	idStr := ctx.Param("id")
-	id, err := strconv.Atoi(idStr)
+	autobuild := ctx.MustGet("autobuild").(models.AutoBuild)
+	// 配置前先回滚数据
+	err := c.MqttSvc.Delete(autobuild.AppId)
 	if err != nil {
-		common.ResponseErrorBusiness(ctx, common.ErrorParams, "id params error", err)
+		common.ResponseErrorBusiness(ctx, common.ErrorMysql, "delete mqtt error", err)
 		return
 	}
 
-	err = c.MqttSvc.Add(id, c.Config.Storybox.Mqtt.Params)
+	err = c.MqttSvc.Add(autobuild.Id, c.Config.Storybox.Mqtt.Params)
 	if err != nil {
 		common.ResponseErrorBusiness(ctx, common.ErrorMysql, "mqtt配置失败", err)
 		return
 	}
-	common.ResponseSuccess(ctx, id)
+	common.ResponseSuccess(ctx, autobuild.Id)
 }
 
 func (c *AutoBuild) Callback(ctx *gin.Context) {
@@ -211,6 +217,13 @@ func (c *AutoBuild) Callback(ctx *gin.Context) {
 		return
 	}
 
+	// 配置前先回滚历史数据
+	err = c.CallbackSvc.Delete(autobuild.AppId)
+	if err != nil {
+		common.ResponseErrorBusiness(ctx, common.ErrorMysql, "delete callback error", err)
+		return
+	}
+
 	err = c.CallbackSvc.Add(autobuild.Id, templateSlice, autobuild.Callback)
 	if err != nil {
 		common.ResponseErrorBusiness(ctx, common.ErrorMysql, "callback配置失败", err)
@@ -229,6 +242,11 @@ func (c *AutoBuild) Upgrade(ctx *gin.Context) {
 
 	if autobuild.Id == 0 || autobuild.UpgradeName == "" || autobuild.UpgradeVcode == 0 {
 		common.ResponseErrorBusiness(ctx, common.ErrorParams, "id, name or vcode params can not be empty", nil)
+		return
+	}
+
+	if autobuild.UpgradeVcode <= 0 {
+		common.ResponseErrorBusiness(ctx, common.ErrorParams, "vcode must bigger than zero", nil)
 		return
 	}
 

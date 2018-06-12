@@ -9,6 +9,7 @@ import { MessageHandlerService  } from '../base/message-handler.service';
 @Injectable()
 export class BaseService {
   currentUser: string = null;
+  loginError: boolean = false;
 
   constructor(
     private http: HttpClient,
@@ -23,7 +24,12 @@ export class BaseService {
     return this.currentUser;
   }
 
+  checkLoginError(): boolean {
+    return this.loginError;
+  }
+
   login(username: string, password: string): Observable<Response> {
+    this.loginError = false;
     let httpOptions = {
       headers: new HttpHeaders({ 
         'Authorization': "Basic " + btoa(`${username}:${password}`) , 
@@ -53,6 +59,7 @@ export class BaseService {
   private handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       this.messageHandlerService.handleError(error);
+      this.loginError = true;
       return of(result as T);
     }
   }

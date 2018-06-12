@@ -1,6 +1,7 @@
 package services
 
 import (
+	"time"
 	"toolkit/backend/models"
 
 	"github.com/go-xorm/xorm"
@@ -20,7 +21,7 @@ func NewUpUpdate(tk, up *xorm.Engine) *UpUpdate {
 
 func (u *UpUpdate) List(name string, vcode int) (updates []models.UpUpdate, err error) {
 	updates = make([]models.UpUpdate, 0)
-	err = u.engineUP.Where("name = ?", name).And("vcode = ?", vcode).Find(&updates)
+	err = u.engineUP.Unscoped().Where("name = ?", name).And("vcode = ?", vcode).Find(&updates)
 	return
 }
 
@@ -33,7 +34,7 @@ func (s *UpUpdate) Delete(name string, vcode int) (err error) {
 		return
 	}
 	for _, one := range lists {
-		_, err = session.Id(one.General.Id).Delete(&one)
+		_, err = session.Unscoped().Id(one.General.Id).Delete(&one)
 		if err != nil {
 			session.Rollback()
 			return
@@ -45,9 +46,17 @@ func (s *UpUpdate) Delete(name string, vcode int) (err error) {
 
 func (u *UpUpdate) Add(autobuildId, vcode int, name, vname string) (err error) {
 	sessionTK := u.engineTK.NewSession()
-	defer sessionTK.Close()
 	sessionUP := u.engineUP.NewSession()
+	defer sessionTK.Close()
 	defer sessionUP.Close()
+	err = sessionTK.Begin()
+	if err != nil {
+		return
+	}
+	err = sessionUP.Begin()
+	if err != nil {
+		return
+	}
 
 	autobuild := models.AutoBuild{}
 	_, err = sessionTK.Where("id = ?", autobuildId).Get(&autobuild)
@@ -62,6 +71,8 @@ func (u *UpUpdate) Add(autobuildId, vcode int, name, vname string) (err error) {
 		Vcode: vcode,
 		Vname: vname,
 	}
+	update.General.UpdatedAt = int(time.Now().Unix())
+	update.General.CreatedAt = int(time.Now().Unix())
 	_, err = sessionUP.Insert(&update)
 	if err != nil {
 		sessionTK.Rollback()

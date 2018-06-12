@@ -17,7 +17,7 @@
     </div>
 </clr-modal>
 
-<clr-modal [(clrModalOpen)]="showOpened">
+<clr-modal [(clrModalOpen)]="showOpened" [clrModalSize]="'xl'">
     <h3 class="modal-title">callback配置</h3>
     <div class="modal-body">
       <clr-datagrid>
@@ -37,8 +37,8 @@
               <clr-dg-cell>{{one.CallbackUrl}}</clr-dg-cell>
               <clr-dg-cell>{{one.CallbackState}}</clr-dg-cell>
               <clr-dg-cell>{{one.Action}}</clr-dg-cell>
-              <clr-dg-cell>{{one.CreatedAt}}</clr-dg-cell>
-              <clr-dg-cell>{{one.UPdatedAt}}</clr-dg-cell>
+              <clr-dg-cell>{{one.CreatedAt * 1000 | date: 'yy-MM-dd HH:mm:ss'}}</clr-dg-cell>
+              <clr-dg-cell>{{one.UpdatedAt * 1000 | date: 'yy-MM-dd HH:mm:ss'}}</clr-dg-cell>
           </clr-dg-row>
       </clr-datagrid>
       <div>

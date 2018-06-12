@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"time"
 	"toolkit/backend/models"
 
 	"github.com/go-xorm/xorm"
@@ -10,18 +11,20 @@ import (
 type PushChannel struct {
 	engineTK   *xorm.Engine
 	engineMqtt *xorm.Engine
+	lastfix    string
 }
 
-func NewPushChannel(tk, mqtt *xorm.Engine) *PushChannel {
+func NewPushChannel(tk, mqtt *xorm.Engine, lastfix string) *PushChannel {
 	return &PushChannel{
 		engineTK:   tk,
 		engineMqtt: mqtt,
+		lastfix:    lastfix,
 	}
 }
 
 func (p *PushChannel) List(channelType string) (pushChannels []models.PushChannel, err error) {
 	pushChannels = make([]models.PushChannel, 0)
-	err = p.engineMqtt.Where("channel_type = ?", channelType).And("service = ?", "mqtt").And("production = ?", "storybox").Find(&pushChannels)
+	err = p.engineMqtt.Where("channel_type = ?", channelType+p.lastfix).And("service = ?", "mqtt").And("production = ?", "storybox").Find(&pushChannels)
 	return
 }
 
@@ -46,9 +49,17 @@ func (p *PushChannel) Delete(channelType string) (err error) {
 
 func (p *PushChannel) Add(autobuildId int, paramsJson string) (err error) {
 	sessionTK := p.engineTK.NewSession()
-	defer sessionTK.Close()
 	sessionMqtt := p.engineMqtt.NewSession()
+	defer sessionTK.Close()
 	defer sessionMqtt.Close()
+	err = sessionTK.Begin()
+	if err != nil {
+		return
+	}
+	err = sessionMqtt.Begin()
+	if err != nil {
+		return
+	}
 
 	autobuild := models.AutoBuild{}
 	_, err = sessionTK.Where("id = ?", autobuildId).Get(&autobuild)
@@ -58,10 +69,12 @@ func (p *PushChannel) Add(autobuildId int, paramsJson string) (err error) {
 		return err
 	}
 
+	channelType := autobuild.AppId + p.lastfix
+
 	// 如果mqtt状态为true，则检查是否已插入
 	if autobuild.Mqtt != 0 {
 		tmpMqtt := models.PushChannel{}
-		_, err = sessionMqtt.Where("channel_type = ?", autobuild.AppId).And("service = ?", "mqtt").And("production = ?", "storybox").Get(&tmpMqtt)
+		_, err = sessionMqtt.Where("channel_type = ?", channelType).And("service = ?", "mqtt").And("production = ?", "storybox").Get(&tmpMqtt)
 		if err != nil {
 			sessionTK.Rollback()
 			sessionMqtt.Rollback()
@@ -73,12 +86,14 @@ func (p *PushChannel) Add(autobuildId int, paramsJson string) (err error) {
 	}
 
 	mqtt := models.PushChannel{
-		ChannelType: autobuild.AppId,
+		ChannelType: channelType,
 		Production:  "storybox",
 		Service:     "mqtt",
 		Params:      paramsJson,
 		Status:      1,
 	}
+	mqtt.General.UpdatedAt = int(time.Now().Unix())
+	mqtt.General.CreatedAt = int(time.Now().Unix())
 	_, err = sessionMqtt.Insert(&mqtt)
 	if err != nil {
 		sessionTK.Rollback()

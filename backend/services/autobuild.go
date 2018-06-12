@@ -1,6 +1,7 @@
 package services
 
 import (
+	"time"
 	"toolkit/backend/models"
 
 	"github.com/go-xorm/xorm"
@@ -17,6 +18,7 @@ func NewAutoBuild(engine *xorm.Engine) *AutoBuild {
 }
 
 func (m *AutoBuild) UpdateByMap(id int, autobuild map[string]interface{}) (err error) {
+	autobuild["updated_at"] = time.Now().Unix()
 	_, err = m.engine.Table(new(models.AutoBuild)).Id(id).Update(&autobuild)
 	return
 }
@@ -34,6 +36,8 @@ func (m *AutoBuild) GetList() (autobuilds []models.AutoBuild, err error) {
 }
 
 func (m *AutoBuild) Add(autobuild *models.AutoBuild) (err error) {
+	autobuild.UpdatedAt = int(time.Now().Unix())
+	autobuild.CreatedAt = int(time.Now().Unix())
 	_, err = m.engine.Insert(autobuild)
 	return
 }

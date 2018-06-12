@@ -42,10 +42,10 @@ func Boot(app *gin.Engine) {
 			AllowHeaders:     []string{"Content-Type", "Access-Control-Allow-Origin", "Authorization"},
 			AllowMethods:     []string{"GET", "POST", "DELETE", "PUT", "PATCH"},
 			AllowCredentials: true,
-			AllowOrigins:     []string{"http://localhost:8080", "http://localhost:6999"},
+			AllowOrigins:     []string{"http://localhost:8280", "http://localhost:8281"},
 			ExposeHeaders:    []string{"Content-Length"},
 			AllowOriginFunc: func(origin string) bool {
-				return origin == "https://localhost:6999"
+				return origin == "https://localhost:8280"
 			},
 			MaxAge: 12 * time.Hour,
 		}))
@@ -57,9 +57,13 @@ func Boot(app *gin.Engine) {
 		panic(err)
 	}
 
+	app.NoRoute(func(c *gin.Context) {
+		c.Redirect(http.StatusMovedPermanently, "")
+	})
+
 	v1 := app.Group("/v1")
 	{
-		v1.GET("/login", gin.BasicAuth(BAConf), func(c *gin.Context) {
+		v1.GET("/toolkit/login", gin.BasicAuth(BAConf), func(c *gin.Context) {
 			user := c.MustGet(gin.AuthUserKey).(string)
 			session := sessions.Default(c)
 			session.Set(sessionKey, user)
@@ -71,7 +75,7 @@ func Boot(app *gin.Engine) {
 			}
 		})
 
-		v1.GET("/logout", func(c *gin.Context) {
+		v1.GET("/toolkit/logout", func(c *gin.Context) {
 			session := sessions.Default(c)
 			user := session.Get(sessionKey)
 			if user == nil {

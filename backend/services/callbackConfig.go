@@ -1,6 +1,7 @@
 package services
 
 import (
+	"time"
 	"toolkit/backend/models"
 
 	"github.com/go-xorm/xorm"
@@ -45,9 +46,17 @@ func (s *CallbackConfig) Delete(appId string) (err error) {
 
 func (u *CallbackConfig) Add(autobuildId int, templateSlice []models.CallbackTemplate, ctype string) (err error) {
 	sessionTK := u.engineTK.NewSession()
-	defer sessionTK.Close()
 	sessionCB := u.engineCB.NewSession()
+	defer sessionTK.Close()
 	defer sessionCB.Close()
+	err = sessionTK.Begin()
+	if err != nil {
+		return
+	}
+	err = sessionCB.Begin()
+	if err != nil {
+		return
+	}
 
 	autobuild := models.AutoBuild{}
 	_, err = sessionTK.Where("id = ?", autobuildId).Get(&autobuild)
@@ -60,10 +69,13 @@ func (u *CallbackConfig) Add(autobuildId int, templateSlice []models.CallbackTem
 	for _, template := range templateSlice {
 		callback := models.CallbackConfig{
 			AppId:         autobuild.AppId,
-			CallbackState: template.State,
+			State:         1,
+			CallbackState: template.CallbackState,
 			CallbackUrl:   template.Url,
 			Action:        template.Action,
 		}
+		callback.General.UpdatedAt = int(time.Now().Unix())
+		callback.General.CreatedAt = int(time.Now().Unix())
 		_, err = sessionCB.Insert(&callback)
 		if err != nil {
 			sessionTK.Rollback()

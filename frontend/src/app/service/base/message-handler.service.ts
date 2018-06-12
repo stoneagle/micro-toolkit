@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core'
 import { Subject } from 'rxjs/Subject';
+import { Router } from "@angular/router";
 
 import { MessageService } from './message.service';
 import { AlertType, httpStatusCode } from '../../shared/shared.const';
@@ -11,6 +12,7 @@ export class MessageHandlerService {
     constructor(
       private msgService: MessageService,
       private translate: TranslateService,
+      private router: Router
     ) { }
 
     public handleError(error: any | string): void {
@@ -23,12 +25,11 @@ export class MessageHandlerService {
             this.msgService.announceMessage(500, msg, AlertType.DANGER);
         } else {
             let code = error.statusCode | error.status;
-            this.msgService.announceMessage(code, msg, AlertType.DANGER);
-            // if (code === httpStatusCode.Unauthorized) {
-            //     this.msgService.announceAppLevelMessage(code, msg, AlertType.DANGER);
-            // } else {
-            //     this.msgService.announceMessage(code, msg, AlertType.DANGER);
-            // }
+            if (code === httpStatusCode.Unauthorized) {
+              this.router.navigate(['/login']);
+            } else {
+              this.msgService.announceMessage(code, msg, AlertType.DANGER);
+            }
         }
     }
 

@@ -10,9 +10,9 @@ type CallbackConfig struct {
 }
 
 type CallbackTemplate struct {
-	Url    string
-	State  string
-	Action string
+	Url           string
+	CallbackState string `json:"callbackState"`
+	Action        string
 }
 
 func (c CallbackConfig) TableName() string {

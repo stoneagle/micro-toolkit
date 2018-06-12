@@ -1,5 +1,5 @@
 app:
-  mode: dev
+  mode: debug 
   BasicAuth: '{"admin":"123456"}'
 storybox:
   cms:
@@ -32,6 +32,7 @@ storybox:
       showsql: True
       location: Asia/Shanghai
     params: '{"host":"mqtt.roobo.net","port":1883,"qos":0,"token":"3057fcaa6a621db5640867e99907370f"}'
+    lastfix: '.xxx.yyy'
   callback:
     database:
       name: callback 
@@ -45,7 +46,7 @@ storybox:
       maxOpen: 5 
       showsql: True
       location: Asia/Shanghai
-    config: '{"tongmi":[{"url":"xxx","state":"aaa","action":"yyy"}],"rtoy":[{"url":"xxx","state":"aaa","action":"yyy"},{"url":"111","state":"222","action":"333"}]}'
+    config: '{"tongmi":[{"url":"xxx","callbackState":"aaa","action":"yyy"}],"rtoy":[{"url":"http://player.roobo.net/device/event","callbackState":"event","action":"sync.album.list"},{"url":"http://player.roobo.net/device/event","callbackState":"event","action":"play.control"},{"url":"http://player.roobo.net/device/event","callbackState":"event","action":"play.status.update"},{"url":"http://storybox.roobo.net/mainctrls/mqttReport","callbackState":"event","action":"device.voice.upload"},{"url":"http://storybox.roobo.net/mainctrls/mqttReport","callbackState":"event","action":""}]}'
   upgrade:
     database:
       name: upgrade 

@@ -26,7 +26,9 @@ export class SignInComponent implements OnInit {
   submit() {
     this.baseService.login(this.username, this.password)
     .subscribe(res => {
-      this.router.navigate(['/toolkit']);
+      if (!this.baseService.checkLoginError()) {
+        this.router.navigate(['/toolkit']);
+      }
     })
   }
 }

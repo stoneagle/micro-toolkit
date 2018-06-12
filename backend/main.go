@@ -11,5 +11,6 @@ func main() {
 	app.Use(gin.Logger())
 	app.Use(gin.Recovery())
 	bootstrap.Boot(app)
+
 	app.Run(":8080")
 }

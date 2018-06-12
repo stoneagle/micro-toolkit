@@ -1,8 +1,10 @@
 package services
 
 import (
+	"errors"
 	"strconv"
 	"strings"
+	"time"
 	"toolkit/backend/models"
 
 	"github.com/go-xorm/xorm"
@@ -47,9 +49,17 @@ func (s *CmsPresetAlbums) Delete(appId string) (err error) {
 
 func (u *CmsPresetAlbums) Add(autobuildId int, albumList string) (err error) {
 	sessionTK := u.engineTK.NewSession()
-	defer sessionTK.Close()
 	sessionAL := u.engineAL.NewSession()
+	defer sessionTK.Close()
 	defer sessionAL.Close()
+	err = sessionTK.Begin()
+	if err != nil {
+		return
+	}
+	err = sessionAL.Begin()
+	if err != nil {
+		return
+	}
 
 	autobuild := models.AutoBuild{}
 	_, err = sessionTK.Where("id = ?", autobuildId).Get(&autobuild)
@@ -63,12 +73,21 @@ func (u *CmsPresetAlbums) Add(autobuildId int, albumList string) (err error) {
 	for _, albumIdStr := range albumStrSlice {
 		albumId, err := strconv.Atoi(albumIdStr)
 		if err != nil {
+			sessionTK.Rollback()
+			sessionAL.Rollback()
 			return err
+		}
+		if albumId <= 0 {
+			sessionTK.Rollback()
+			sessionAL.Rollback()
+			return errors.New("albumId must bigger than 0:" + albumIdStr)
 		}
 		album := models.CmsPresetAlbums{
 			AppId:   autobuild.AppId,
 			AlbumId: albumId,
 		}
+		album.General.UpdatedAt = int(time.Now().Unix())
+		album.General.CreatedAt = int(time.Now().Unix())
 		_, err = sessionAL.Insert(&album)
 		if err != nil {
 			sessionTK.Rollback()
