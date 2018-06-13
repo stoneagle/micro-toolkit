@@ -73,3 +73,16 @@ storybox:
       maxOpen: 5 
       showsql: True
       location: Asia/Shanghai
+  rdevice:
+    database:
+      name: rdevice 
+      type: mysql
+      host: mysql.localhost
+      port: 3306
+      user: root
+      target: toolkit
+      password: 123456
+      maxIdle: 10 
+      maxOpen: 5 
+      showsql: True
+      location: Asia/Shanghai

@@ -1,0 +1,87 @@
+<clr-modal [(clrModalOpen)]="modelOpened">
+    <h3 class="modal-title">Scan配置</h3>
+    <div class="modal-body">
+			<form #scanForm="ngForm" (ngSubmit)="submit()">
+				<div class="form-group">
+					<label for="ScanType">扫描类别</label>
+					<div class="select">
+							<select id="ScanType" [(ngModel)]="scan.ScanType" name="ScanType">
+                <option *ngFor="let one of getKeys(scanTypeConfig)" [ngValue]=one >
+                  {{scanTypeConfig.get(one)}}
+                </option>
+							</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="FuncType">功能场景</label>
+					<div class="select">
+							<select id="FuncType" [(ngModel)]="scan.FuncType" name="FuncType">
+                <option *ngFor="let one of getKeys(funcTypeConfig)" [ngValue]=one >
+                  {{funcTypeConfig.get(one)}}
+                </option>
+							</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="InfoType">匹配模式</label>
+					<div class="select">
+							<select id="InfoType" [(ngModel)]="scan.InfoType" name="InfoType">
+                <option *ngFor="let one of getKeys(infoTypeConfig)" [ngValue]=one >
+                  {{infoTypeConfig.get(one)}}
+                </option>
+							</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="info">Info</label>
+					<input type="text" class="form-control" id="info" required [(ngModel)]="scan.Info" name="info" placeholder="匹配内容">
+				</div>
+				<button type="submit" class="btn btn-success">Submit</button>
+        <button type="button" class="btn btn-primary" (click)="closeCreate()">Cancel</button>
+			</form>
+    </div>
+</clr-modal>
+
+<clr-modal [(clrModalOpen)]="showOpened" [clrModalSize]="'xl'">
+    <h3 class="modal-title">scan配置</h3>
+    <div class="modal-body">
+      <clr-datagrid>
+          <!-- <clr-dg-column>ID</clr-dg-column> -->
+          <!-- <clr-dg-column>AppId</clr-dg-column> -->
+          <clr-dg-column>ScanType</clr-dg-column>
+          <clr-dg-column>FuncType</clr-dg-column>
+          <clr-dg-column>InfoType</clr-dg-column>
+          <clr-dg-column>Info</clr-dg-column>
+          <clr-dg-column>创建时间</clr-dg-column>
+          <clr-dg-column>更新时间</clr-dg-column>
+          <clr-dg-column>操作</clr-dg-column>
+
+          <clr-dg-row *ngFor="let one of scans">
+              <!-- <clr-dg-cell>{{one.Id}}</clr-dg-cell> -->
+              <!-- <clr-dg-cell>{{one.AppId}}</clr-dg-cell> -->
+              <clr-dg-cell>{{scanTypeConfig.get(one.ScanType)}}</clr-dg-cell>
+              <clr-dg-cell>{{funcTypeConfig.get(one.FuncType)}}</clr-dg-cell>
+              <clr-dg-cell>{{infoTypeConfig.get(one.InfoType)}}</clr-dg-cell>
+              <clr-dg-cell>{{one.Info}}</clr-dg-cell>
+              <clr-dg-cell>{{one.CreatedAt * 1000 | date: 'yy-MM-dd HH:mm:ss'}}</clr-dg-cell>
+              <clr-dg-cell>{{one.UpdatedAt * 1000 | date: 'yy-MM-dd HH:mm:ss'}}</clr-dg-cell>
+              <clr-dg-cell>
+                <div class="btn-group btn-primary btn-sm">
+                    <button (click)="openUpdate(one)" class="btn">更新</button>
+                    <button (click)="delete(one)" class="btn btn-danger">删除</button>
+                </div>
+              </clr-dg-cell>
+          </clr-dg-row>
+          <clr-dg-footer>
+              <clr-dg-pagination #pagination [clrDgPageSize]="pageSize" [(clrDgPage)]="currentPage" [clrDgTotalItems]="totalCount">
+                  {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                  of {{pagination.totalItems}} autobuilds
+              </clr-dg-pagination>
+          </clr-dg-footer>
+      </clr-datagrid>
+      <div>
+        <button type="button" class="btn btn-primary" (click)="openCreate()">新建</button>
+        <button type="button" class="btn btn-primary" (click)="showOpened = false">关闭</button>
+      </div>
+    </div>
+</clr-modal>
