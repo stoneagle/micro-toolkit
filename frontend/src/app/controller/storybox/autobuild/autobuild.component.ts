@@ -6,6 +6,7 @@ import { CallbackAutobuildComponent } from './callback/callback.component';
 import { MqttAutobuildComponent } from './mqtt/mqtt.component';
 import { UpgradeAutobuildComponent } from './upgrade/upgrade.component';
 import { CmsAutobuildComponent } from './cms/cms.component';
+import { ScanAutobuildComponent } from './scan/scan.component';
 import { AutobuildService  } from '../../../service/storybox/autobuild.service';
 import { MessageHandlerService  } from '../../../service/base/message-handler.service';
 
@@ -27,6 +28,8 @@ export class AutobuildComponent implements OnInit {
   upgradeAutobuild: UpgradeAutobuildComponent;
   @ViewChild(CmsAutobuildComponent)
   cmsAutobuild: CmsAutobuildComponent;
+  @ViewChild(ScanAutobuildComponent)
+  scanAutobuild: ScanAutobuildComponent;
 
   autobuilds: Autobuild[] = [];
 
@@ -79,6 +82,10 @@ export class AutobuildComponent implements OnInit {
   openUpgradeModel(ab: Autobuild): void {
     let autobuild = Object.assign({}, ab);
     this.upgradeAutobuild.newUpgrade(autobuild);
+  }
+
+  openScanModel(ab: Autobuild): void {
+    this.scanAutobuild.newScan(ab.AppId);
   }
 
   openAddModel(): void {

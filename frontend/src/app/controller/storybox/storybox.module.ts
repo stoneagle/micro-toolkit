@@ -6,7 +6,9 @@ import { CallbackAutobuildComponent } from './autobuild/callback/callback.compon
 import { MqttAutobuildComponent } from './autobuild/mqtt/mqtt.component';
 import { UpgradeAutobuildComponent } from './autobuild/upgrade/upgrade.component';
 import { CmsAutobuildComponent } from './autobuild/cms/cms.component';
+import { ScanAutobuildComponent } from './autobuild/scan/scan.component';
 import { AutobuildService  } from '../../service/storybox/autobuild.service';
+import { ScanService  } from '../../service/storybox/scan.service';
 import { MessageHandlerService  } from '../../service/base/message-handler.service';
 
 import { BrowserModule } from '@angular/platform-browser';
@@ -25,6 +27,7 @@ import { FormsModule }   from '@angular/forms';
     MqttAutobuildComponent,
     UpgradeAutobuildComponent,
     CmsAutobuildComponent,
+    ScanAutobuildComponent,
   ],
   imports: [
     BrowserModule,
@@ -36,6 +39,7 @@ import { FormsModule }   from '@angular/forms';
   ],
   providers: [
     AutobuildService,
+    ScanService,
     MessageHandlerService
   ],
   exports: [
