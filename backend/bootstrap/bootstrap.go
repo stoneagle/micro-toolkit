@@ -36,6 +36,7 @@ func Boot(app *gin.Engine) {
 	setProjectEngine(conf.Storybox.Callback.Database)
 	setProjectEngine(conf.Storybox.Upgrade.Database)
 	setProjectEngine(conf.Storybox.Album.Database)
+	setProjectEngine(conf.Storybox.Rdevice.Database)
 
 	if conf.App.Mode == "debug" {
 		app.Use(cors.New(cors.Config{
@@ -90,6 +91,7 @@ func Boot(app *gin.Engine) {
 		toolkit := v1.Group("/toolkit", AuthRequired())
 		{
 			controllers.NewAutoBuild(common.GetEngine(conf.Storybox.Toolkit.Database.Name)).Router(toolkit)
+			controllers.NewScan(common.GetEngine(conf.Storybox.Rdevice.Database.Name)).Router(toolkit)
 		}
 	}
 }

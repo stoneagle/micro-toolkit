@@ -3,7 +3,7 @@
   <clr-icon shape="refresh"></clr-icon>
 </span>
 <clr-datagrid (clrDgRefresh)="load($event)">
-    <clr-dg-column>ID</clr-dg-column>
+    <!-- <clr-dg-column>ID</clr-dg-column> -->
     <clr-dg-column>appID</clr-dg-column>
     <clr-dg-column>cms配置</clr-dg-column>
     <clr-dg-column>mqtt接入</clr-dg-column>
@@ -15,7 +15,7 @@
     <clr-dg-column>操作</clr-dg-column>
 
     <clr-dg-row *ngFor="let build of autobuilds">
-        <clr-dg-cell>{{build.Id}}</clr-dg-cell>
+        <!-- <clr-dg-cell>{{build.Id}}</clr-dg-cell> -->
         <clr-dg-cell>{{build.AppId}}</clr-dg-cell>
         <clr-dg-cell>
           <a href="javascript:void(0)" (click)="openCmsModel(build)" [ngClass]="(build.CmsSourceApp=='')?'label label-danger clickable':'label label-success'">
@@ -48,9 +48,10 @@
         <clr-dg-cell>{{build.CreatedAt * 1000 | date: 'yy-MM-dd HH:mm:ss'}}</clr-dg-cell>
         <clr-dg-cell>{{build.UpdatedAt * 1000 | date: 'yy-MM-dd HH:mm:ss'}}</clr-dg-cell>
         <clr-dg-cell>
-          <button *ngIf="(build.CmsSourceApp == '') && (build.Callback == '') && (build.Mqtt == 0) && (build.UpgradeName == '') && (build.AlbumList == '')" (click)="delete(build)" type="button" class="btn btn-sm btn-icon btn-danger">
-						<clr-icon shape="error-standard"></clr-icon>
-					</button>
+					<div class="btn-group btn-primary btn-sm">
+							<button (click)="openScanModel(build)" class="btn">扫描配置</button>
+							<button *ngIf="(build.CmsSourceApp == '') && (build.Callback == '') && (build.Mqtt == 0) && (build.UpgradeName == '') && (build.AlbumList == '')" (click)="delete(build)" class="btn btn-danger">删除</button>
+					</div>
         </clr-dg-cell>
     </clr-dg-row>
 		<clr-dg-footer>
@@ -67,5 +68,5 @@
 <callback-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></callback-autobuild>
 <album-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></album-autobuild>
 <upgrade-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></upgrade-autobuild>
-
-
+<upgrade-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></upgrade-autobuild>
+<scan-autobuild></scan-autobuild>

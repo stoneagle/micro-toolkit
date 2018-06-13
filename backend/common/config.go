@@ -49,6 +49,9 @@ type Conf struct {
 		Album struct {
 			Database DBConf
 		}
+		Rdevice struct {
+			Database DBConf
+		}
 	}
 }
 

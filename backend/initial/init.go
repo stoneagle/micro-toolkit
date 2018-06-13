@@ -41,12 +41,12 @@ func initToolkit(dbConfig common.DBConf, mode string) {
 	engine.TZLocation = location
 	engine.StoreEngine("InnoDB")
 	engine.Charset("utf8")
-	if mode == "dev" {
-		err = engine.DropTables(new(cm.AutoBuild), new(cm.CallbackConfig), new(cm.CmsPresetAlbums), new(cm.PushChannel), new(cm.UpUpdate))
+	if mode == "debug" {
+		err = engine.DropTables(new(cm.AutoBuild), new(cm.CallbackConfig), new(cm.CmsPresetAlbums), new(cm.PushChannel), new(cm.UpUpdate), new(cm.DeviceScan))
 		if err != nil {
 			panic(err)
 		}
-		err = engine.Sync2(new(cm.AutoBuild), new(cm.CallbackConfig), new(cm.CmsPresetAlbums), new(cm.PushChannel), new(cm.UpUpdate))
+		err = engine.Sync2(new(cm.AutoBuild), new(cm.CallbackConfig), new(cm.CmsPresetAlbums), new(cm.PushChannel), new(cm.UpUpdate), new(cm.DeviceScan))
 		if err != nil {
 			panic(err)
 		}
