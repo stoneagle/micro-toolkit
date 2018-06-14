@@ -6,3 +6,5 @@ backend/.*.swp
 backend/*/.*.swp
 release/*
 backend/static/*
+hack/release/.config.yaml
+hack/release/.config.prod.json

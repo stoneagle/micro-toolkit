@@ -31,8 +31,8 @@ storybox:
       maxOpen: 5 
       showsql: True
       location: Asia/Shanghai
-    params: '{"host":"mqtt.roobo.net","port":1883,"qos":0,"token":"3057fcaa6a621db5640867e99907370f"}'
-    lastfix: '.xxx.yyy'
+    params: '{"host":"mqtt-inner.roo.bo","port":1883,"qos":0,"token":"24127f62c10e84f44e5fe404552be612"}'
+    lastfix: '.mqtt.robot.online'
   callback:
     database:
       name: callback 
@@ -46,7 +46,7 @@ storybox:
       maxOpen: 5 
       showsql: True
       location: Asia/Shanghai
-    config: '{"tongmi":[{"url":"xxx","callbackState":"aaa","action":"yyy"}],"rtoy":[{"url":"http://player.roobo.net/device/event","callbackState":"event","action":"sync.album.list"},{"url":"http://player.roobo.net/device/event","callbackState":"event","action":"play.control"},{"url":"http://player.roobo.net/device/event","callbackState":"event","action":"play.status.update"},{"url":"http://storybox.roobo.net/mainctrls/mqttReport","callbackState":"event","action":"device.voice.upload"},{"url":"http://storybox.roobo.net/mainctrls/mqttReport","callbackState":"event","action":""}]}'
+    config: '{"tongmi":[{"url":"http://tongmi.roobo.com/storybox3/notice/deviceStatus","callbackState":"custom","action":"device.info"}, {"url":"http://api.ros.ai/player/device/event","callbackState":"event","action":""}, {"url":"http://tongmi.roobo.com/storybox3/notice/deviceStatus","callbackState":"event","action":"device.info"}, {"url":"http://tongmi.roobo.com/storybox3/notice/event","callbackState":"online","action":"device.status.online"}, {"url":"http://tongmi.roobo.com/storybox3/notice/event","callbackState":"event","action":""}],"rtoy":[{"url":"http://storybox-inner.roo.bo/rtoy/mainctrls/mqttReport","callbackState":"event","action":""}, {"url":"http://storybox-inner.roo.bo/rtoy/mainctrls/mqttReport","callbackState":"custom","action":""}, {"url":"http://api.ros.ai/player/device/event","callbackState":"event","action":"sync.album.list"}]}'
   upgrade:
     database:
       name: upgrade 

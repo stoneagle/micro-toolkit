@@ -4,8 +4,8 @@ USERNAME := $(shell id -u -n)
 GROUP := $(shell id -g)
 PROJECT := toolkit
 IDENTIFY_GIT_TAG := $(shell git describe --tags `git rev-list --tags --max-count=1`) 
-DEVELOP_PREFIX =
-RELEASE_PREFIX =
+DEVELOP_PREFIX = registry.cn-beijing.aliyuncs.com/roobodev/
+RELEASE_PREFIX = registry.cn-beijing.aliyuncs.com/roobo/
 GOVERSION = 1.10
 
 run-web: 
@@ -46,9 +46,15 @@ clean-files:
 	rm -rf ./backend/static/* && \
 	rm -rf ./backend/release/* 
 
+build-release:
+	cp ./hack/release/Dockerfile.release.example ./hack/release/Dockerfile.release && \
+	sed -i "s:IMAGE:$(DEVELOP_PREFIX)toolkit:" ./hack/release/Dockerfile.release && \
+	sed -i "s:TAG:$(RELEASE_TAG):" ./hack/release/Dockerfile.release && \
+	docker build -f ./hack/release/Dockerfile.release -t $(RELEASE_PREFIX)toolkit:$(RELEASE_TAG) . && \
+	rm ./hack/release/Dockerfile.release
+
 push-release:
-	docker tag $(DEVELOP_PREFIX)toolkit:$(IDENTIFY_GIT_TAG) $(DEVELOP_PREFIX)toolkit:$(IDENTIFY_GIT_TAG) && \
-	docker push $(RELEASE_PREFIX)toolkit:$(IDENTIFY_GIT_TAG)
+	docker push $(RELEASE_PREFIX)toolkit:$(RELEASE_TAG)
 
 backend-build:
 	docker run -it --rm \

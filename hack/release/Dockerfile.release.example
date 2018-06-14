@@ -1,0 +1,4 @@
+FROM IMAGE:TAG
+
+COPY ./hack/release/.config.yaml /go/src/config/config.yaml
+COPY ./hack/release/.config.prod.json /go/src/toolkit/static/assets/config/config.prod.json
