@@ -81,3 +81,7 @@ ng-build:
 		-w /app/frontend \
 		alexsuch/angular-cli:v1.1.3 \
 		ng build --environment=prod --deploy-url static
+
+# init
+init-db:
+	docker exec -w /go/src/toolkit/backend -it toolkit-$(USERNAME)-golang go run ./initial/init.go 
