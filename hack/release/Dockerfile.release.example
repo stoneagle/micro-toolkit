@@ -2,3 +2,5 @@ FROM IMAGE:TAG
 
 COPY ./hack/release/.config.yaml /go/src/toolkit/config/config.yaml
 COPY ./hack/release/.config.prod.json /go/src/toolkit/static/assets/config/config.prod.json
+
+CMD ["/bin/bash", "-c", "echo 100.98.221.180 cms-api.inner.roo.bo >> /etc/hosts && ./backend"]
