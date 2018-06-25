@@ -5,6 +5,7 @@
 <clr-datagrid (clrDgRefresh)="load($event)">
     <!-- <clr-dg-column>ID</clr-dg-column> -->
     <clr-dg-column>appID</clr-dg-column>
+    <clr-dg-column>desc</clr-dg-column>
     <clr-dg-column>cms配置</clr-dg-column>
     <clr-dg-column>mqtt接入</clr-dg-column>
     <clr-dg-column>回调</clr-dg-column>
@@ -17,6 +18,7 @@
     <clr-dg-row *ngFor="let build of autobuilds">
         <!-- <clr-dg-cell>{{build.Id}}</clr-dg-cell> -->
         <clr-dg-cell>{{build.AppId}}</clr-dg-cell>
+        <clr-dg-cell>{{build.Desc}}</clr-dg-cell>
         <clr-dg-cell>
           <a href="javascript:void(0)" (click)="openCmsModel(build)" [ngClass]="(build.CmsSourceApp=='')?'label label-danger clickable':'label label-success'">
             {{(build.CmsSourceApp === '' ? '-' : build.CmsSourceApp)}}
@@ -50,6 +52,7 @@
         <clr-dg-cell>
 					<div class="btn-group btn-primary btn-sm">
 							<button (click)="openScanModel(build)" class="btn">扫描配置</button>
+							<button (click)="openEditModel(build)" class="btn">编辑</button>
 							<button *ngIf="(build.CmsSourceApp == '') && (build.Callback == '') && (build.Mqtt == 0) && (build.UpgradeName == '') && (build.AlbumList == '')" (click)="delete(build)" class="btn btn-danger">删除</button>
 					</div>
         </clr-dg-cell>
@@ -62,6 +65,7 @@
 		</clr-dg-footer>
 </clr-datagrid>
 
+<edit-autobuild (edit)="editFinished($event)"></edit-autobuild>
 <add-autobuild (create)="createFinished($event)"></add-autobuild>
 <cms-autobuild (create)="createFinished($event)"></cms-autobuild>
 <mqtt-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></mqtt-autobuild>

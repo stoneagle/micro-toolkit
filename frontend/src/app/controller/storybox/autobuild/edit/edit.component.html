@@ -1,10 +1,10 @@
 <clr-modal [(clrModalOpen)]="modelOpened">
-    <h3 class="modal-title">创建自动化配置</h3>
+    <h3 class="modal-title">修改自动化配置</h3>
     <div class="modal-body">
 			<form #addForm="ngForm" (ngSubmit)="submit()">
 				<div class="form-group">
 					<label for="AppId">AppId</label>
-					<input type="text" class="form-control" id="AppId" required [(ngModel)]="autobuild.AppId" name="AppId" >
+					<input type="text" class="form-control" id="AppId" readonly [(ngModel)]="autobuild.AppId" name="AppId" >
 				</div>
 				<div class="form-group">
 					<label for="Desc">Desc</label>

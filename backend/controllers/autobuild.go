@@ -51,6 +51,7 @@ func (c *AutoBuild) Router(router *gin.RouterGroup) {
 	autobuilds.POST("/:id/callback", c.Callback)
 	autobuilds.POST("/:id/upgrade", c.Upgrade)
 	autobuilds.POST("/:id/album", c.Album)
+	autobuilds.PUT("", c.Edit)
 	autobuilds.DELETE("/:id", InitAutobuild(), c.Delete)
 	autobuilds.DELETE("/:id/mqtt", InitAutobuild(), c.MqttDelete)
 	autobuilds.DELETE("/:id/callback", InitAutobuild(), c.CallbackDelete)
@@ -103,6 +104,24 @@ func (c *AutoBuild) Create(ctx *gin.Context) {
 	common.ResponseSuccess(ctx, autobuild)
 }
 
+func (c *AutoBuild) Edit(ctx *gin.Context) {
+	var autobuild models.AutoBuild
+	if err := ctx.ShouldBindJSON(&autobuild); err != nil {
+		common.ResponseErrorBusiness(ctx, common.ErrorParams, "params error: ", err)
+		return
+	}
+
+	updateAutobuild := map[string]interface{}{
+		"desc": autobuild.Desc,
+	}
+	err := c.AutoBuildSvc.UpdateByMap(autobuild.Id, updateAutobuild)
+	if err != nil {
+		common.ResponseErrorBusiness(ctx, common.ErrorMysql, "update autobuild error", err)
+		return
+	}
+	common.ResponseSuccess(ctx, struct{}{})
+}
+
 func (c *AutoBuild) Delete(ctx *gin.Context) {
 	autobuild := ctx.MustGet("autobuild").(models.AutoBuild)
 	err := c.AutoBuildSvc.Delete(autobuild.Id)
@@ -144,7 +163,7 @@ func (c *AutoBuild) Cms(ctx *gin.Context) {
 		return
 	}
 
-	response, err := common.DoHttpPost(url, jsonStr, 30*time.Second)
+	response, err := common.DoHttpPost(url, jsonStr, 60*time.Second)
 	if err != nil {
 		common.ResponseErrorBusiness(ctx, common.ErrorParams, "request response error", err)
 		return

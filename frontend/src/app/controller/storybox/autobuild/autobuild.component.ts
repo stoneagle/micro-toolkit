@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Autobuild } from '../../../model/storybox/autobuild';
 import { AddAutobuildComponent } from './add/add.component';
+import { EditAutobuildComponent } from './edit/edit.component';
 import { AlbumAutobuildComponent } from './album/album.component';
 import { CallbackAutobuildComponent } from './callback/callback.component';
 import { MqttAutobuildComponent } from './mqtt/mqtt.component';
@@ -18,6 +19,8 @@ import { MessageHandlerService  } from '../../../service/base/message-handler.se
 export class AutobuildComponent implements OnInit {
   @ViewChild(AddAutobuildComponent)
   addAutobuild: AddAutobuildComponent;
+  @ViewChild(EditAutobuildComponent)
+  editAutobuild: EditAutobuildComponent;
   @ViewChild(AlbumAutobuildComponent)
   albumAutobuild: AlbumAutobuildComponent;
   @ViewChild(CallbackAutobuildComponent)
@@ -48,6 +51,12 @@ export class AutobuildComponent implements OnInit {
   }
 
   createFinished(resource: string): void {
+    if (resource != '') {
+      this.refresh();
+    }
+  }
+
+  editFinished(resource: string): void {
     if (resource != '') {
       this.refresh();
     }
@@ -92,6 +101,11 @@ export class AutobuildComponent implements OnInit {
     this.addAutobuild.newAdd();
   }
 
+  openEditModel(ab: Autobuild): void {
+    let autobuild = Object.assign({}, ab);
+    this.editAutobuild.newEdit(autobuild);
+  }
+
   delete(ab: Autobuild): void {
     this.autobuildService.delete(ab.Id)
     .subscribe(autobuild => {
@@ -106,7 +120,6 @@ export class AutobuildComponent implements OnInit {
   }
 
   refresh() {
-    this.currentPage = 1;
     this.refreshAutobuilds(0, 10);
   }
 

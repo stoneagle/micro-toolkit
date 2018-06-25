@@ -191,6 +191,14 @@ export class AutobuildService {
     );
   }
 
+  edit(autobuild: Autobuild): Observable<Autobuild> {
+      return this.http.put<Response>(AppConfig.settings.apiServer.endpoint + this.autobuildUrl, JSON.stringify(autobuild), httpOptions).pipe(
+      tap(res => this.log('PROCESS.EDIT', res)),
+      catchError(this.handleError<Response>('editAutobuild')),
+      map(res => new Autobuild(res.data))
+    );
+  }
+
   private handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       // this.messageHandlerService.showError(`${operation} failed: ${error.message}`, '');
