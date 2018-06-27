@@ -3,74 +3,34 @@
   <clr-icon shape="refresh"></clr-icon>
 </span>
 <clr-datagrid (clrDgRefresh)="load($event)">
-    <!-- <clr-dg-column>ID</clr-dg-column> -->
-    <clr-dg-column>appID</clr-dg-column>
-    <clr-dg-column>desc</clr-dg-column>
-    <clr-dg-column>cms配置</clr-dg-column>
-    <clr-dg-column>mqtt接入</clr-dg-column>
-    <clr-dg-column>回调</clr-dg-column>
-    <clr-dg-column>升级配置</clr-dg-column>
-    <clr-dg-column>预置歌单</clr-dg-column>
-    <clr-dg-column>创建时间</clr-dg-column>
-    <clr-dg-column>更新时间</clr-dg-column>
-    <clr-dg-column>操作</clr-dg-column>
+  <!-- <clr-dg-column>ID</clr-dg-column> -->
+  <clr-dg-column>appID</clr-dg-column>
+  <clr-dg-column>desc</clr-dg-column>
+  <clr-dg-column>创建时间</clr-dg-column>
+  <clr-dg-column>更新时间</clr-dg-column>
+  <clr-dg-column>操作</clr-dg-column>
 
-    <clr-dg-row *ngFor="let build of autobuilds">
-        <!-- <clr-dg-cell>{{build.Id}}</clr-dg-cell> -->
-        <clr-dg-cell>{{build.AppId}}</clr-dg-cell>
-        <clr-dg-cell>{{build.Desc}}</clr-dg-cell>
-        <clr-dg-cell>
-          <a href="javascript:void(0)" (click)="openCmsModel(build)" [ngClass]="(build.CmsSourceApp=='')?'label label-danger clickable':'label label-success'">
-            {{(build.CmsSourceApp === '' ? '-' : build.CmsSourceApp)}}
-					</a>
-          <a href="javascript:void(0)" *ngIf="(build.CmsSourceApp != '')" class="label label-success">
-            {{build.CmsExecTime}}
-					</a>
-        </clr-dg-cell>
-        <clr-dg-cell>
-          <a href="javascript:void(0)" (click)="openMqttModel(build)" [ngClass]="(build.Mqtt==0)?'label label-danger clickable':'label label-success clickable'">
-            {{(build.Mqtt === 0 ? '-' : '已配置')}}
-					</a>
-        </clr-dg-cell>
-        <clr-dg-cell>
-          <a href="javascript:void(0)" (click)="openCallbackModel(build)" [ngClass]="(build.Callback=='')?'label label-danger clickable':'label label-success clickable'">
-            {{(build.Callback === '' ? '-' : build.Callback)}}
-					</a>
-        </clr-dg-cell>
-        <clr-dg-cell>
-          <a href="javascript:void(0)" (click)="openUpgradeModel(build)" [ngClass]="(build.UpgradeName=='')?'label label-danger clickable':'label label-success clickable'">
-            {{(build.UpgradeName === '' ? '-' : build.UpgradeName)}}
-					</a>
-        </clr-dg-cell>
-        <clr-dg-cell>
-          <a href="javascript:void(0)" (click)="openAlbumModel(build)" [ngClass]="(build.AlbumList=='')?'label label-danger clickable':'label label-success clickable'">
-            {{(build.AlbumList === '' ? '-' : build.AlbumList)}}
-          </a>
-        </clr-dg-cell>
-        <clr-dg-cell>{{build.CreatedAt * 1000 | date: 'yy-MM-dd HH:mm:ss'}}</clr-dg-cell>
-        <clr-dg-cell>{{build.UpdatedAt * 1000 | date: 'yy-MM-dd HH:mm:ss'}}</clr-dg-cell>
-        <clr-dg-cell>
-					<div class="btn-group btn-primary btn-sm">
-							<button (click)="openScanModel(build)" class="btn">扫描配置</button>
-							<button (click)="openEditModel(build)" class="btn">编辑</button>
-							<button *ngIf="(build.CmsSourceApp == '') && (build.Callback == '') && (build.Mqtt == 0) && (build.UpgradeName == '') && (build.AlbumList == '')" (click)="delete(build)" class="btn btn-danger">删除</button>
-					</div>
-        </clr-dg-cell>
-    </clr-dg-row>
-		<clr-dg-footer>
-				<clr-dg-pagination #pagination [clrDgPageSize]="pageSize" [(clrDgPage)]="currentPage" [clrDgTotalItems]="totalCount">
-						{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-						of {{pagination.totalItems}} autobuilds
-				</clr-dg-pagination>
-		</clr-dg-footer>
+  <clr-dg-row *ngFor="let build of autobuilds">
+    <!-- <clr-dg-cell>{{build.Id}}</clr-dg-cell> -->
+    <clr-dg-cell>{{build.AppId}}</clr-dg-cell>
+    <clr-dg-cell>{{build.Desc}}</clr-dg-cell>
+    <clr-dg-cell>{{build.CreatedAt * 1000 | date: 'yy-MM-dd HH:mm:ss'}}</clr-dg-cell>
+    <clr-dg-cell>{{build.UpdatedAt * 1000 | date: 'yy-MM-dd HH:mm:ss'}}</clr-dg-cell>
+    <clr-dg-cell>
+			<div class="btn-group btn-primary btn-sm">
+				<button (click)="openEditModel(build)" class="btn">编辑</button>
+				<button *ngIf="(build.CmsSourceApp == '') && (build.Callback == '') && (build.Mqtt == 0) && (build.UpgradeName == '') && (build.AlbumList == '')" (click)="delete(build)" class="btn btn-danger">删除</button>
+			</div>
+    </clr-dg-cell>
+		<expand-autobuild *clrIfExpanded [build]="build" ngProjectAs="clr-dg-row-detail"></expand-autobuild>
+  </clr-dg-row>
+	<clr-dg-footer>
+		<clr-dg-pagination #pagination [clrDgPageSize]="pageSize" [(clrDgPage)]="currentPage" [clrDgTotalItems]="totalCount">
+			{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+			of {{pagination.totalItems}} autobuilds
+		</clr-dg-pagination>
+	</clr-dg-footer>
 </clr-datagrid>
 
 <edit-autobuild (edit)="editFinished($event)"></edit-autobuild>
 <add-autobuild (create)="createFinished($event)"></add-autobuild>
-<cms-autobuild (create)="createFinished($event)"></cms-autobuild>
-<mqtt-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></mqtt-autobuild>
-<callback-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></callback-autobuild>
-<album-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></album-autobuild>
-<upgrade-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></upgrade-autobuild>
-<upgrade-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></upgrade-autobuild>
-<scan-autobuild></scan-autobuild>

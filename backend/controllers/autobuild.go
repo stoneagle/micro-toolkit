@@ -41,6 +41,7 @@ func NewAutoBuild(engine *xorm.Engine) *AutoBuild {
 func (c *AutoBuild) Router(router *gin.RouterGroup) {
 	autobuilds := router.Group("autobuild")
 	autobuilds.GET("", c.List)
+	autobuilds.GET("/:id/autobuild", InitAutobuild(), c.One)
 	autobuilds.GET("/:id/mqtt", InitAutobuild(), c.MqttList)
 	autobuilds.GET("/:id/callback", InitAutobuild(), c.CallbackList)
 	autobuilds.GET("/:id/upgrade", InitAutobuild(), c.UpgradeList)
@@ -86,6 +87,11 @@ func (c *AutoBuild) List(ctx *gin.Context) {
 		return
 	}
 	common.ResponseSuccess(ctx, autobuilds)
+}
+
+func (c *AutoBuild) One(ctx *gin.Context) {
+	autobuild := ctx.MustGet("autobuild").(models.AutoBuild)
+	common.ResponseSuccess(ctx, autobuild)
 }
 
 func (c *AutoBuild) Create(ctx *gin.Context) {

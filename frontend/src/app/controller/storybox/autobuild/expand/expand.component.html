@@ -1,0 +1,62 @@
+<clr-datagrid>
+  <clr-dg-column>操作</clr-dg-column>
+  <clr-dg-column>详情</clr-dg-column>
+  <clr-dg-row>
+    <clr-dg-cell>cms配置</clr-dg-cell>
+    <clr-dg-cell>
+      <a href="javascript:void(0)" (click)="openCmsModel(build)" [ngClass]="(build.CmsSourceApp=='')?'label label-danger clickable':'label label-success'">
+        {{(build.CmsSourceApp === '' ? '-' : build.CmsSourceApp)}}
+			</a>
+      <a href="javascript:void(0)" *ngIf="(build.CmsSourceApp != '')" class="label label-success">
+        {{build.CmsExecTime}}
+			</a>
+    </clr-dg-cell>
+  </clr-dg-row>
+  <clr-dg-row>
+    <clr-dg-column>mqtt接入</clr-dg-column>
+    <clr-dg-cell>
+      <a href="javascript:void(0)" (click)="openMqttModel(build)" [ngClass]="(build.Mqtt==0)?'label label-danger clickable':'label label-success clickable'">
+        {{(build.Mqtt === 0 ? '-' : '已配置')}}
+			</a>
+    </clr-dg-cell>
+  </clr-dg-row>
+  <clr-dg-row>
+    <clr-dg-column>回调</clr-dg-column>
+    <clr-dg-cell>
+      <a href="javascript:void(0)" (click)="openCallbackModel(build)" [ngClass]="(build.Callback=='')?'label label-danger clickable':'label label-success clickable'">
+        {{(build.Callback === '' ? '-' : build.Callback)}}
+			</a>
+    </clr-dg-cell>
+  </clr-dg-row>
+  <clr-dg-row>
+    <clr-dg-column>升级配置</clr-dg-column>
+    <clr-dg-cell>
+      <a href="javascript:void(0)" (click)="openUpgradeModel(build)" [ngClass]="(build.UpgradeName=='')?'label label-danger clickable':'label label-success clickable'">
+        {{(build.UpgradeName === '' ? '-' : build.UpgradeName)}}
+			</a>
+    </clr-dg-cell>
+  </clr-dg-row>
+  <clr-dg-row>
+    <clr-dg-column>预置歌单</clr-dg-column>
+    <clr-dg-cell>
+      <a href="javascript:void(0)" (click)="openAlbumModel(build)" [ngClass]="(build.AlbumList=='')?'label label-danger clickable':'label label-success clickable'">
+        {{(build.AlbumList === '' ? '-' : build.AlbumList)}}
+      </a>
+    </clr-dg-cell>
+  </clr-dg-row>
+  <clr-dg-row>
+    <clr-dg-column>扫描配置</clr-dg-column>
+    <clr-dg-cell>
+			<div class="btn-group btn-primary btn-sm">
+				<button (click)="openScanModel(build)" class="btn">扫描配置</button>
+			</div>
+    </clr-dg-cell>
+  </clr-dg-row>
+</clr-datagrid>
+
+<cms-autobuild (create)="createFinished($event)"></cms-autobuild>
+<mqtt-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></mqtt-autobuild>
+<callback-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></callback-autobuild>
+<album-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></album-autobuild>
+<upgrade-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></upgrade-autobuild>
+<scan-autobuild></scan-autobuild>

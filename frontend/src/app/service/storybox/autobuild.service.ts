@@ -183,6 +183,13 @@ export class AutobuildService {
     );
   }
 
+  one(id: number): Observable<Autobuild> {
+      return this.http.get<Response>(AppConfig.settings.apiServer.endpoint + this.autobuildUrl + `/${id}/autobuild`, httpOptions).pipe(
+      catchError(this.handleError<Response>('getAutobuild')),
+      map(res => new Autobuild(res.data))
+    );
+  }
+
   add(autobuild: Autobuild): Observable<Autobuild> {
       return this.http.post<Response>(AppConfig.settings.apiServer.endpoint + this.autobuildUrl, JSON.stringify(autobuild), httpOptions).pipe(
       tap(res => this.log('PROCESS.ADD', res)),

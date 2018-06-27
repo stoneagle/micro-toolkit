@@ -2,12 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Autobuild } from '../../../model/storybox/autobuild';
 import { AddAutobuildComponent } from './add/add.component';
 import { EditAutobuildComponent } from './edit/edit.component';
-import { AlbumAutobuildComponent } from './album/album.component';
-import { CallbackAutobuildComponent } from './callback/callback.component';
-import { MqttAutobuildComponent } from './mqtt/mqtt.component';
-import { UpgradeAutobuildComponent } from './upgrade/upgrade.component';
-import { CmsAutobuildComponent } from './cms/cms.component';
-import { ScanAutobuildComponent } from './scan/scan.component';
+import { ExpandAutobuildComponent } from './expand/expand.component';
 import { AutobuildService  } from '../../../service/storybox/autobuild.service';
 import { MessageHandlerService  } from '../../../service/base/message-handler.service';
 
@@ -21,18 +16,8 @@ export class AutobuildComponent implements OnInit {
   addAutobuild: AddAutobuildComponent;
   @ViewChild(EditAutobuildComponent)
   editAutobuild: EditAutobuildComponent;
-  @ViewChild(AlbumAutobuildComponent)
-  albumAutobuild: AlbumAutobuildComponent;
-  @ViewChild(CallbackAutobuildComponent)
-  callbackAutobuild: CallbackAutobuildComponent;
-  @ViewChild(MqttAutobuildComponent)
-  mqttAutobuild: MqttAutobuildComponent;
-  @ViewChild(UpgradeAutobuildComponent)
-  upgradeAutobuild: UpgradeAutobuildComponent;
-  @ViewChild(CmsAutobuildComponent)
-  cmsAutobuild: CmsAutobuildComponent;
-  @ViewChild(ScanAutobuildComponent)
-  scanAutobuild: ScanAutobuildComponent;
+  @ViewChild(ExpandAutobuildComponent)
+  expandAutobuild: ExpandAutobuildComponent;
 
   autobuilds: Autobuild[] = [];
 
@@ -60,41 +45,6 @@ export class AutobuildComponent implements OnInit {
     if (resource != '') {
       this.refresh();
     }
-  }
-
-  rollbackFinished(resource: string): void {
-    if (resource != '') {
-      this.refresh();
-    }
-  }
-
-  openAlbumModel(ab: Autobuild): void {
-    let autobuild = Object.assign({}, ab);
-    this.albumAutobuild.newAlbum(autobuild);
-  }
-
-  openCallbackModel(ab: Autobuild): void {
-    let autobuild = Object.assign({}, ab);
-    this.callbackAutobuild.newCallback(autobuild);
-  }
-
-  openMqttModel(ab: Autobuild): void {
-    let autobuild = Object.assign({}, ab);
-    this.mqttAutobuild.newMqtt(autobuild);
-  }
-
-  openCmsModel(ab: Autobuild): void {
-    let autobuild = Object.assign({}, ab);
-    this.cmsAutobuild.newCms(autobuild);
-  }
-
-  openUpgradeModel(ab: Autobuild): void {
-    let autobuild = Object.assign({}, ab);
-    this.upgradeAutobuild.newUpgrade(autobuild);
-  }
-
-  openScanModel(ab: Autobuild): void {
-    this.scanAutobuild.newScan(ab.AppId);
   }
 
   openAddModel(): void {
