@@ -5,6 +5,7 @@ import { EditAutobuildComponent } from './edit/edit.component';
 import { ExpandAutobuildComponent } from './expand/expand.component';
 import { AutobuildService  } from '../../../service/storybox/autobuild.service';
 import { MessageHandlerService  } from '../../../service/base/message-handler.service';
+import { doFiltering } from '../../../shared/utils';
 
 @Component({
   selector: 'app-autobuild',
@@ -20,6 +21,7 @@ export class AutobuildComponent implements OnInit {
   expandAutobuild: ExpandAutobuildComponent;
 
   autobuilds: Autobuild[] = [];
+  allAutobuilds: Autobuild[] = [];
 
 	pageSize: number = 10;
 	totalCount: number = 0;
@@ -57,27 +59,29 @@ export class AutobuildComponent implements OnInit {
   }
 
   delete(ab: Autobuild): void {
-    this.autobuildService.delete(ab.Id)
-    .subscribe(autobuild => {
+    this.autobuildService.delete(ab.Id).subscribe(autobuild => {
       this.refresh();
     })
   }
 
 	load(state: any): void {
     if (state && state.page) {
-      this.refreshAutobuilds(state.page.from, state.page.to + 1);
+      let filterAutobuilds = doFiltering<Autobuild>(this.allAutobuilds, state);
+      if (state.filters === undefined && state.page.to == 1) {
+        this.autobuilds = this.allAutobuilds.slice(0, this.pageSize);
+      } else {
+        this.autobuilds = filterAutobuilds.slice(state.page.from, state.page.to + 1);
+      }
+      this.totalCount = filterAutobuilds.length;
     }
   }
 
   refresh() {
-    this.refreshAutobuilds(0, 10);
-  }
-
-  refreshAutobuilds(from: number, to: number): void {
-    this.autobuildService.getList()
-    .subscribe(res => {
+    this.autobuildService.getList().subscribe(res => {
 			this.totalCount = res.length;
-      this.autobuilds = res.slice(from, to);
+      this.allAutobuilds = res; 
+      this.currentPage = 1;
+      this.autobuilds = this.allAutobuilds.slice(0, this.pageSize);
     })
   }
 }

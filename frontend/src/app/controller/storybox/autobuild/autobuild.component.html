@@ -4,8 +4,8 @@
 </span>
 <clr-datagrid (clrDgRefresh)="load($event)">
   <!-- <clr-dg-column>ID</clr-dg-column> -->
-  <clr-dg-column>appID</clr-dg-column>
-  <clr-dg-column>desc</clr-dg-column>
+  <clr-dg-column [clrDgField]="'AppId'" >appID</clr-dg-column>
+  <clr-dg-column [clrDgField]="'Desc'" >desc</clr-dg-column>
   <clr-dg-column>创建时间</clr-dg-column>
   <clr-dg-column>更新时间</clr-dg-column>
   <clr-dg-column>操作</clr-dg-column>
