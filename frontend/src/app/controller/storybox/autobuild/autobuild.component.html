@@ -22,7 +22,7 @@
 				<button *ngIf="(build.CmsSourceApp == '') && (build.Callback == '') && (build.Mqtt == 0) && (build.UpgradeName == '') && (build.AlbumList == '')" (click)="delete(build)" class="btn btn-danger">删除</button>
 			</div>
     </clr-dg-cell>
-		<expand-autobuild *clrIfExpanded [build]="build" ngProjectAs="clr-dg-row-detail"></expand-autobuild>
+		<expand-autobuild *clrIfExpanded [autobuild]="build" ngProjectAs="clr-dg-row-detail"></expand-autobuild>
   </clr-dg-row>
 	<clr-dg-footer>
 		<clr-dg-pagination #pagination [clrDgPageSize]="pageSize" [(clrDgPage)]="currentPage" [clrDgTotalItems]="totalCount">

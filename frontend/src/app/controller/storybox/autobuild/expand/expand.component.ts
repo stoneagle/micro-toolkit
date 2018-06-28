@@ -31,13 +31,17 @@ export class ExpandAutobuildComponent implements OnInit {
   @ViewChild(ConfigAutobuildComponent)
   configAutobuild: ConfigAutobuildComponent;
 
-  @Input() build:Autobuild;
+  @Input() autobuild: Autobuild;
+  build: Autobuild = new Autobuild();
 
   constructor(
     private autobuildService: AutobuildService,
   ) { }
 
   ngOnInit() {
+    this.autobuildService.one(this.autobuild.Id).subscribe(res => {
+      this.build = res;
+    });
   }
 
   openAlbumModel(ab: Autobuild): void {

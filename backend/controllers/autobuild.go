@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"strconv"
 	"strings"
 	"time"
@@ -157,6 +158,7 @@ func (c *AutoBuild) Cms(ctx *gin.Context) {
 		common.ResponseErrorBusiness(ctx, common.ErrorParams, "sourceApp can not equal to the targetApp", nil)
 		return
 	}
+	autobuild.CmsSourceApp = strings.TrimSpace(autobuild.CmsSourceApp)
 
 	url := c.Config.Storybox.Cms.Url
 	params := map[string]string{
@@ -164,6 +166,7 @@ func (c *AutoBuild) Cms(ctx *gin.Context) {
 		"dstAppId": autobuild.AppId,
 		"token":    c.Config.Storybox.Cms.Supertoken,
 	}
+	fmt.Printf("%v\r\n", params)
 
 	jsonStr, err := json.Marshal(params)
 	if err != nil {

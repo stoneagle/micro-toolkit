@@ -71,6 +71,7 @@ func (u *CmsPresetAlbums) Add(autobuildId int, albumList string) (err error) {
 
 	albumStrSlice := strings.Split(albumList, ",")
 	for _, albumIdStr := range albumStrSlice {
+		albumIdStr = strings.TrimSpace(albumIdStr)
 		albumId, err := strconv.Atoi(albumIdStr)
 		if err != nil {
 			sessionTK.Rollback()

@@ -215,7 +215,7 @@ export class AutobuildService {
 
   edit(autobuild: Autobuild): Observable<Autobuild> {
       return this.http.put<Response>(AppConfig.settings.apiServer.endpoint + this.autobuildUrl, JSON.stringify(autobuild), httpOptions).pipe(
-      tap(res => this.log('PROCESS.EDIT', res)),
+      tap(res => this.log('PROCESS.UPDATE', res)),
       catchError(this.handleError<Response>('editAutobuild')),
       map(res => new Autobuild(res.data))
     );
