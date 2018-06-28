@@ -27,6 +27,12 @@ type Conf struct {
 		BasicAuth string `yaml:"BasicAuth"`
 	}
 	Storybox struct {
+		Config struct {
+			Service    string
+			Url        string
+			Supertoken string
+			Key        string
+		}
 		Cms struct {
 			Url        string
 			Supertoken string

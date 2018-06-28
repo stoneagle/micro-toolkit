@@ -1,0 +1,17 @@
+<clr-modal [(clrModalOpen)]="showOpened" [clrModalSize]="'xl'">
+    <h3 class="modal-title">config配置</h3>
+    <div class="modal-body">
+      <clr-datagrid>
+          <clr-dg-column>Key</clr-dg-column>
+          <clr-dg-column>Value</clr-dg-column>
+
+          <clr-dg-row *ngFor="let one of getKeys(configs)">
+              <clr-dg-cell>{{one}}</clr-dg-cell>
+              <clr-dg-cell>{{configs.get(one)}}</clr-dg-cell>
+          </clr-dg-row>
+      </clr-datagrid>
+      <div>
+        <button type="button" class="btn btn-primary" (click)="showOpened = false">Cancel</button>
+      </div>
+    </div>
+</clr-modal>

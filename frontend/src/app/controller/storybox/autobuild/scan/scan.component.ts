@@ -40,7 +40,6 @@ export class ScanAutobuildComponent implements OnInit {
 
   openUpdate(scan: DeviceScan) {
     this.scan = scan;
-    console.log(this.scan);
     this.modelOpened = true;
     this.showOpened = false;
   }

@@ -3,6 +3,7 @@ import { AutobuildComponent } from './autobuild/autobuild.component';
 import { AddAutobuildComponent } from './autobuild/add/add.component';
 import { EditAutobuildComponent } from './autobuild/edit/edit.component';
 import { ExpandAutobuildComponent } from './autobuild/expand/expand.component';
+import { ConfigAutobuildComponent } from './autobuild/config/config.component';
 import { AlbumAutobuildComponent } from './autobuild/album/album.component';
 import { CallbackAutobuildComponent } from './autobuild/callback/callback.component';
 import { MqttAutobuildComponent } from './autobuild/mqtt/mqtt.component';
@@ -27,6 +28,7 @@ import { FormsModule }   from '@angular/forms';
     EditAutobuildComponent,
     ExpandAutobuildComponent,
     AlbumAutobuildComponent,
+    ConfigAutobuildComponent,
     CallbackAutobuildComponent,
     MqttAutobuildComponent,
     UpgradeAutobuildComponent,

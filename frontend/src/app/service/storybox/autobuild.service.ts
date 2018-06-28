@@ -115,6 +115,21 @@ export class AutobuildService {
     );
   }
 
+  getConfig(autobuild: Autobuild): Observable<Map<string, string>> {
+    return this.http.get<Response>(AppConfig.settings.apiServer.endpoint + this.autobuildUrl + `/${autobuild.Id}/config`, httpOptions).pipe(
+      catchError(this.handleError<Response>('getConfigs')),
+      map(res => {
+        let configs:Map<string, string> = new Map(); 
+        if (res) {
+          for (let k in res.data["config"]) {
+            configs.set(k, res.data["config"][k]);
+          }
+        }
+        return configs; 
+      })
+    );
+  }
+
   getMqtt(autobuild: Autobuild): Observable<Mqtt[]> {
     return this.http.get<Response>(AppConfig.settings.apiServer.endpoint + this.autobuildUrl + `/${autobuild.Id}/mqtt`, httpOptions).pipe(
       catchError(this.handleError<Response>('getMqtts')),

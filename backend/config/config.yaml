@@ -2,6 +2,11 @@ app:
   mode: debug 
   BasicAuth: '{"admin":"123456"}'
 storybox:
+  config:
+    service: robot
+    url: http://configmanager.storybox-dev.svc.roobo.net/item/get
+    supertoken: BRnlz69HuLsoX8EJOvAZBF1LlIdRx6FD
+    key: 'netType,devLogo,nickName,nickVersion'
   cms:
     url: http://cms.roobo.net/api/app/copy
     supertoken: b9b065fe0714d483aa4146bb715f9895

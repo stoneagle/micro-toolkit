@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"strconv"
+	"strings"
 	"time"
 	"toolkit/backend/common"
 	"toolkit/backend/models"
@@ -46,6 +47,7 @@ func (c *AutoBuild) Router(router *gin.RouterGroup) {
 	autobuilds.GET("/:id/callback", InitAutobuild(), c.CallbackList)
 	autobuilds.GET("/:id/upgrade", InitAutobuild(), c.UpgradeList)
 	autobuilds.GET("/:id/album", InitAutobuild(), c.AlbumList)
+	autobuilds.GET("/:id/config", InitAutobuild(), c.ConfigList)
 	autobuilds.POST("", c.Create)
 	autobuilds.POST("/:id/cms", c.Cms)
 	autobuilds.POST("/:id/mqtt", InitAutobuild(), c.Mqtt)
@@ -346,6 +348,41 @@ func (c *AutoBuild) AlbumList(ctx *gin.Context) {
 		return
 	}
 	common.ResponseSuccess(ctx, albums)
+}
+
+func (c *AutoBuild) ConfigList(ctx *gin.Context) {
+	autobuild := ctx.MustGet("autobuild").(models.AutoBuild)
+
+	url := c.Config.Storybox.Config.Url
+	keyList := strings.Split(c.Config.Storybox.Config.Key, ",")
+	params := map[string]interface{}{
+		"service": c.Config.Storybox.Config.Service,
+		"token":   c.Config.Storybox.Config.Supertoken,
+		"appId":   autobuild.AppId,
+		"config":  keyList,
+	}
+	jsonStr, err := json.Marshal(params)
+	if err != nil {
+		common.ResponseErrorBusiness(ctx, common.ErrorParams, "request json params error", err)
+		return
+	}
+	response, err := common.DoHttpPost(url, jsonStr, 3*time.Second)
+	if err != nil {
+		common.ResponseErrorBusiness(ctx, common.ErrorParams, "request response error", err)
+		return
+	}
+	result := common.Rres{}
+	err = json.Unmarshal(response, &result)
+	if err != nil {
+		common.ResponseErrorBusiness(ctx, common.ErrorParams, "request response unmarshal error", err)
+		return
+	}
+
+	if result.Result != 0 {
+		common.ResponseErrorBusiness(ctx, common.ErrorParams, "config manage list get failed:"+result.Msg, nil)
+		return
+	}
+	common.ResponseSuccess(ctx, result.Data)
 }
 
 func (c *AutoBuild) MqttDelete(ctx *gin.Context) {

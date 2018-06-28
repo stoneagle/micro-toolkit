@@ -6,6 +6,7 @@ import { CallbackAutobuildComponent } from '../callback/callback.component';
 import { MqttAutobuildComponent } from '../mqtt/mqtt.component';
 import { UpgradeAutobuildComponent } from '../upgrade/upgrade.component';
 import { CmsAutobuildComponent } from '../cms/cms.component';
+import { ConfigAutobuildComponent } from '../config/config.component';
 import { ScanAutobuildComponent } from '../scan/scan.component';
 
 @Component({
@@ -27,6 +28,8 @@ export class ExpandAutobuildComponent implements OnInit {
   cmsAutobuild: CmsAutobuildComponent;
   @ViewChild(ScanAutobuildComponent)
   scanAutobuild: ScanAutobuildComponent;
+  @ViewChild(ConfigAutobuildComponent)
+  configAutobuild: ConfigAutobuildComponent;
 
   @Input() build:Autobuild;
 
@@ -64,6 +67,10 @@ export class ExpandAutobuildComponent implements OnInit {
 
   openScanModel(ab: Autobuild): void {
     this.scanAutobuild.newScan(ab.AppId);
+  }
+
+  openConfigModel(ab: Autobuild): void {
+    this.configAutobuild.newConfig(ab);
   }
 
   rollbackFinished(resource: string): void {

@@ -13,7 +13,7 @@
     </clr-dg-cell>
   </clr-dg-row>
   <clr-dg-row>
-    <clr-dg-column>mqtt接入</clr-dg-column>
+    <clr-dg-cell>mqtt接入</clr-dg-cell>
     <clr-dg-cell>
       <a href="javascript:void(0)" (click)="openMqttModel(build)" [ngClass]="(build.Mqtt==0)?'label label-danger clickable':'label label-success clickable'">
         {{(build.Mqtt === 0 ? '-' : '已配置')}}
@@ -21,7 +21,7 @@
     </clr-dg-cell>
   </clr-dg-row>
   <clr-dg-row>
-    <clr-dg-column>回调</clr-dg-column>
+    <clr-dg-cell>回调</clr-dg-cell>
     <clr-dg-cell>
       <a href="javascript:void(0)" (click)="openCallbackModel(build)" [ngClass]="(build.Callback=='')?'label label-danger clickable':'label label-success clickable'">
         {{(build.Callback === '' ? '-' : build.Callback)}}
@@ -29,7 +29,7 @@
     </clr-dg-cell>
   </clr-dg-row>
   <clr-dg-row>
-    <clr-dg-column>升级配置</clr-dg-column>
+    <clr-dg-cell>升级配置</clr-dg-cell>
     <clr-dg-cell>
       <a href="javascript:void(0)" (click)="openUpgradeModel(build)" [ngClass]="(build.UpgradeName=='')?'label label-danger clickable':'label label-success clickable'">
         {{(build.UpgradeName === '' ? '-' : build.UpgradeName)}}
@@ -37,7 +37,7 @@
     </clr-dg-cell>
   </clr-dg-row>
   <clr-dg-row>
-    <clr-dg-column>预置歌单</clr-dg-column>
+    <clr-dg-cell>预置歌单</clr-dg-cell>
     <clr-dg-cell>
       <a href="javascript:void(0)" (click)="openAlbumModel(build)" [ngClass]="(build.AlbumList=='')?'label label-danger clickable':'label label-success clickable'">
         {{(build.AlbumList === '' ? '-' : build.AlbumList)}}
@@ -45,10 +45,11 @@
     </clr-dg-cell>
   </clr-dg-row>
   <clr-dg-row>
-    <clr-dg-column>扫描配置</clr-dg-column>
+    <clr-dg-cell>相关配置</clr-dg-cell>
     <clr-dg-cell>
 			<div class="btn-group btn-primary btn-sm">
-				<button (click)="openScanModel(build)" class="btn">扫描配置</button>
+				<button (click)="openScanModel(build)" class="btn">扫描</button>
+				<button (click)="openConfigModel(build)" class="btn">个性化</button>
 			</div>
     </clr-dg-cell>
   </clr-dg-row>
@@ -59,4 +60,5 @@
 <callback-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></callback-autobuild>
 <album-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></album-autobuild>
 <upgrade-autobuild (create)="createFinished($event)" (roll)="rollbackFinished($event)"></upgrade-autobuild>
+<config-autobuild></config-autobuild>
 <scan-autobuild></scan-autobuild>
